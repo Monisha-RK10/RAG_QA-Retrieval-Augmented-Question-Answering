@@ -14,6 +14,14 @@ from pydantic import BaseModel
 class QueryRequest(BaseModel):
     question: str
 
+from fastapi import HTTPException
+
+# Load or create vectorstore at startup
+chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
+vectordb = create_vectorstore(chunks, persist_directory="db")
+llm = load_llm()
+qa_chain = build_qa_chain(llm, vectordb)
+
 app = FastAPI(title="RAG API")
 
 DATA_DIR = Path("data")
