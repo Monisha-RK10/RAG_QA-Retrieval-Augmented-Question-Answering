@@ -2,6 +2,10 @@
 # Step 2: Embedding
 # Create Embeddings and Vector DB
 
+Note: For vector DB in production,
+# First run: You upload a PDF → chunks → embeddings → vectorstore created in db/.
+# Later runs: DB already exists → no chunking/embedding → queries are super fast.
+
 from langchain.embeddings import HuggingFaceEmbeddings                                               # Imports LangChain’s wrapper around Hugging Face sentence-transformers
 from langchain_community.vectorstores import Chroma                                                  # Imports Chroma, an open-source vector database that stores embeddings and lets you run similarity searches (kNN). Chroma here is LangChain’s integration, not raw ChromaDB API.
 from langchain.schema import Document                                                                # List of LangChain `Document` objects (from `loader.py`).
@@ -29,8 +33,8 @@ def load_or_create_vectorstore(
     """
     embeddings = HuggingFaceEmbeddings(model_name=model_name)                                        # Each text chunk will be fed into this model → returns a vector of floats. 
 
-    # Case 1: DB already exists -> just load it
-    if os.path.exists(os.path.join(persist_directory, "index")):
+    # Case 1: DB already exists -> just load it                                                      # Pre-created an empty db/ folder (good practice in production)
+    if os.path.exists(os.path.join(persist_directory, "index")):                                     # Check if Chroma’s index files are already inside db/, if yes, don’t recompute anything. This saves time, GPU/CPU, and prevents duplicate embeddings being created each run.
         vectordb = Chroma(
             persist_directory=persist_directory,
             embedding_function=embeddings
@@ -39,7 +43,7 @@ def load_or_create_vectorstore(
         return vectordb
 
     # Case 2: No DB yet -> need chunks to build it
-    if chunks is None:
+    if chunks is None:                                                                               # If DB does not exist, need to build, ensure chunk is passed
         raise ValueError(
             "No existing DB found and no chunks provided to create one."
         )
