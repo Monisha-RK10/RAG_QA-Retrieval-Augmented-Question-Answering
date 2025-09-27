@@ -4,6 +4,7 @@
 - Don’t recompute embeddings on every run.
 - Persist them once (Chroma in "db" folder), reload if already there.
 - Saves huge compute costs in production.
+
 -`Cached embeddings in a persistent vector DB so they’re computed only once, queries just reuse it, which saves time and resources.`
 
 ### 2. Quantization (in llm.py)
