@@ -33,15 +33,20 @@ app = FastAPI(title="RAG API")
 llm = load_llm()
 
 # --------------------------
-# Load persisted vectorstore if exists
+# Load persisted vectorstore or create from default PDF
 # --------------------------
+default_pdf = DATA_DIR / "RAG_Paper.pdf"
 if DB_DIR.exists() and any(DB_DIR.iterdir()):
     vectordb = Chroma(
         persist_directory=str(DB_DIR),
         embedding_function=embeddings
     )
+elif default_pdf.exists():
+    chunks = load_and_chunk_pdf(str(default_pdf))
+    vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
 else:
-    vectordb = None  # Will create dynamically if a PDF is uploaded
+    vectordb = None
+
 
 # --------------------------
 # Build QA chain if vectordb exists
@@ -91,7 +96,7 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
         raise HTTPException(status_code=400, detail="PDF has no valid content to embed.")
 
     # Create vectorstore and persist
-    vectordb_local = create_vectorstore(chunks, persist_directory=str(DB_DIR))
+    vectordb_local = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
 
     # Build QA chain for this PDF
     qa_chain_local = build_qa_chain(llm, vectordb_local)
