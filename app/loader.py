@@ -1,3 +1,4 @@
+# app/loader.py
 # Step 1: PDF loading + chunking
 
 from langchain_community.document_loaders import PyPDFLoader
