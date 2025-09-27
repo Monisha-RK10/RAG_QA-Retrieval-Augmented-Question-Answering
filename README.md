@@ -20,7 +20,7 @@
  - Add fallback model:
    - GPU busy → smaller CPU model.
    - Large model too slow → use flan-t5-base
-  -**Added a timeout for robustness, and if the GPU is overloaded, fall back to a smaller CPU model for graceful degradation**
+ - **Added a timeout for robustness, and if the GPU is overloaded, fall back to a smaller CPU model for graceful degradation**
 
  ### 5. Model Caching (in fastapi_app.py)
  - Load LLM once at startup (FastAPI app startup).
