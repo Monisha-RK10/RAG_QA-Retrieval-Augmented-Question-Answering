@@ -19,7 +19,7 @@ from fastapi import HTTPException
 # Load or create vectorstore at startup
 chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
 vectordb = create_vectorstore(chunks, persist_directory="db")
-#llm = load_llm()
+llm = load_llm()
 qa_chain = build_qa_chain(llm, vectordb)
 
 app = FastAPI(title="RAG API")
@@ -30,7 +30,7 @@ DB_DIR.mkdir(exist_ok=True)
 DATA_DIR.mkdir(exist_ok=True)
 
 # Load LLM once at startup
-llm = load_llm()
+#llm = load_llm()
 
 # Load existing persisted vectorstore if available
 if DB_DIR.exists() and any(DB_DIR.iterdir()):
