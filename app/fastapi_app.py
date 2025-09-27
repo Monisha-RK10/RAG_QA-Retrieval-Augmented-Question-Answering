@@ -9,6 +9,10 @@ from app.embeddings import create_vectorstore
 from app.llm import load_llm
 from app.chain import build_qa_chain
 from langchain_community.vectorstores import Chroma
+from pydantic import BaseModel
+
+class QueryRequest(BaseModel):
+    question: str
 
 app = FastAPI(title="RAG API")
 
@@ -31,15 +35,15 @@ qa_chain = build_qa_chain(llm, vectordb) if vectordb else None
 
 
 @app.post("/query")
-async def query_document(question: str):
+async def query_document(request: QueryRequest):
     """
     Run a question against the persisted vectorstore.
     """
     if not vectordb:
         raise HTTPException(status_code=400, detail="No vectorstore found. Upload a PDF first.")
 
-    result = qa_chain({"query": question})
-    return JSONResponse({"answer": result["result"]})
+    result = qa_chain({"query": request.question})
+    return {"answer": result["result"]}
 
 
 @app.post("/upload_query")
