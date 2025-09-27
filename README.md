@@ -16,14 +16,17 @@
 - Handles multiple queries in parallel, improving throughput under load
 - Supported batched inference in the pipeline so multiple user queries can be processed in one forward pass
 
+ ### Fallbacks (in llm.py)
+ - Add fallback model:
+   - GPU busy → smaller CPU model.
+   - Large model too slow → use flan-t5-base
+  - Added a timeout for robustness, and if the GPU is overloaded, fall back to a smaller CPU model for graceful degradation
+
  ### Model Caching (in fastapi_app.py)
  - Load LLM once at startup (FastAPI app startup).
  - Avoids repeated heavy initialization.
  - Cached the LLM pipeline at app startup, so inference requests reuse the same model object, reducing latency
 
- ### Timeouts & Fallbacks
- - Add timeout per query (avoid hanging requests).
- - Add fallback model:
-   - GPU busy → smaller CPU model.
-   - Large model too slow → use flan-t5-base
-  - Added a timeout for robustness, and if the GPU is overloaded, fall back to a smaller CPU model for graceful degradation
+### Timeouts (in FastAPI /query endpoint)
+- Add timeout per query (avoid hanging requests).
+  
