@@ -1,10 +1,10 @@
 # app/loader.py
 # Step 1: PDF loading + chunking
 
-from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader                                                   # Reads the PDF and returns a list of Document objects (usually one per page). Each Document has at least page_content (string) and metadata (dict, often includes source and page number).
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from typing import List
-from langchain.schema import Document  # for type hints
+from langchain.schema import Document                                                                          # To annotate the return type and help editors/linters, for type hints
 
 def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int = 100) -> List[Document]:
     """
@@ -20,13 +20,17 @@ def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int 
     """
     loader = PyPDFLoader(pdf_path)
     documents = loader.load()
+    bad = {"references","appendix","limitations","ethics"}
+    filtered = [d for d in documents if not any(k in d.page_content.lower() for k in bad)]
 
-    filtered_docs = [
-        doc for doc in documents
-        if not any(x in doc.page_content for x in ["References", "Appendix", "Limitations", "Ethics"])
-    ]
+    assert chunk_overlap < chunk_size, "chunk_overlap must be less than chunk_size"
 
-    splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)
+  #  filtered_docs = [
+  #      doc for doc in documents
+  #      if not any(x in doc.page_content for x in ["References", "Appendix", "Limitations", "Ethics"])
+  #  ]
+
+    splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)              # Recursive splitter attempts to split on natural boundaries (double newlines, sentences, punctuation) before falling back to character splits.
     chunks = splitter.split_documents(filtered_docs)
 
     print(f"Total chunks after filtering: {len(chunks)}")
