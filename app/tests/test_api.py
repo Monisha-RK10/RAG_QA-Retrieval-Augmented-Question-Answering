@@ -24,9 +24,9 @@ def test_pipeline():
 
     # 4. Build QA chain
     qa_chain = build_qa_chain(llm, vectordb)
-    result = qa_chain({"query": "What is seq2seq model?"})
+    result = qa_chain({"query": "What is Abstractive Question Answering"})
     print("Test query answer:", result["result"])
-    assert "seq2seq" in result["result"].lower(), "Unexpected answer"
+    assert "Abstractive" in result["result"].lower(), "Unexpected answer"
 
 # Test FastAPI /query endpoint
 def test_query_endpoint():
