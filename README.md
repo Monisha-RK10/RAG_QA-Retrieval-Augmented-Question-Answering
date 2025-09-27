@@ -5,7 +5,7 @@
 - Persist them once (Chroma in "db" folder), reload if already there.
 - Saves huge compute costs in production.
 
--`Cached embeddings in a persistent vector DB so they’re computed only once, queries just reuse it, which saves time and resources.`
+`Cached embeddings in a persistent vector DB so they’re computed only once, queries just reuse it, which saves time and resources.`
 
 ### 2. Quantization (in llm.py)
 - int8 quantization (bitsandbytes) → cuts GPU memory, improves latency.
