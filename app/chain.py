@@ -3,7 +3,6 @@
 
 from langchain.chains import RetrievalQA
 from langchain import PromptTemplate
-from langchain.chains import RetrievalQA
 from langchain.schema import BaseRetriever
 from langchain.llms.base import LLM
 
