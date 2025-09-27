@@ -30,7 +30,7 @@ def test_pipeline():
 
 # Test FastAPI /query endpoint
 def test_query_endpoint():
-    response = client.post("/query", json={"question": "What is seq2seq model?"})
+    response = client.post("/query", json={"question": "What is Abstractive Question Answering?"})
     #print("API response:", response.json())
     assert response.status_code == 200
     print(response.json())
