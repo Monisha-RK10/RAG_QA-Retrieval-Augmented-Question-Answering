@@ -5,7 +5,7 @@ from pathlib import Path
 from pydantic import BaseModel
 
 from app.loader import load_and_chunk_pdf
-from app.embeddings import create_vectorstore
+from app.embeddings import load_or_create_vectorstore
 from app.llm import load_llm
 from app.chain import build_qa_chain
 from langchain_community.vectorstores import Chroma
