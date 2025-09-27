@@ -15,7 +15,7 @@ def test_pipeline():
     assert len(chunks) > 0, "No chunks loaded"
 
     # 2. Create vectorstore
-    vectordb = create_vectorstore(chunks, persist_directory="db")
+    vectordb = load_or_create_vectorstore(chunks, persist_directory="db")
     assert vectordb is not None, "Vectorstore creation failed"
 
     # 3. Load LLM
