@@ -1,4 +1,6 @@
 # app/fastapi_app.py
+# Production tweak #5: Model caching at startup
+
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from pathlib import Path
