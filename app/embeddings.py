@@ -2,8 +2,7 @@
 # Step 2: Embedding
 # Create Embeddings and Vector DB
 
-# Production tweak #1: Vector DB persistence
-# -> Ensures embeddings are computed once and reused across runs.
+# Production tweak #1: Vector DB persistence, ensures embeddings are computed once and reused across runs.
 
 # Note: For vector DB in production,
 # First run: You upload a PDF → chunks → embeddings → vectorstore created in db/.
