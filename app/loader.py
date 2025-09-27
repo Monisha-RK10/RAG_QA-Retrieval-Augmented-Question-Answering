@@ -21,7 +21,7 @@ def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int 
     loader = PyPDFLoader(pdf_path)
     documents = loader.load()
     bad = {"references","appendix","limitations","ethics"}
-    filtered = [d for d in documents if not any(k in d.page_content.lower() for k in bad)]
+    filtered_docs = [d for d in documents if not any(k in d.page_content.lower() for k in bad)]
 
     assert chunk_overlap < chunk_size, "chunk_overlap must be less than chunk_size"
 
