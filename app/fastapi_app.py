@@ -1,5 +1,5 @@
 # app/fastapi_app.py
-# Production tweak #5: Model caching at startup
+# Production tweak #5: Model caching at startup, load LLM once at startup (FastAPI app startup).
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
