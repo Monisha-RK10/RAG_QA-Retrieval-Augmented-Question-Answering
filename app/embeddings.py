@@ -2,7 +2,7 @@
 # Step 2: Embedding
 # Create Embeddings and Vector DB
 
-Note: For vector DB in production,
+# Note: For vector DB in production,
 # First run: You upload a PDF → chunks → embeddings → vectorstore created in db/.
 # Later runs: DB already exists → no chunking/embedding → queries are super fast.
 
