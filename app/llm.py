@@ -11,6 +11,7 @@
 def load_llm(model_name: str = "google/flan-t5-large"):
     from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline                # Loads the tokenizer (maps text ↔ tokens), loads a Seq2Seq language model (T5 family, BART, etc.), Hugging Face’s inference wrapper (simplifies generation).
     from langchain.llms import HuggingFacePipeline                                         # LangChain adapter so you can call the model inside a chain.
+    import torch
 
     tokenizer = AutoTokenizer.from_pretrained(model_name)                                  # Downloads (or loads locally) the tokenizer associated with the given model.
 
