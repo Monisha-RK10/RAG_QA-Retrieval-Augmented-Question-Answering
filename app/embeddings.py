@@ -4,27 +4,50 @@
 
 from langchain.embeddings import HuggingFaceEmbeddings                                               # Imports LangChain’s wrapper around Hugging Face sentence-transformers
 from langchain_community.vectorstores import Chroma                                                  # Imports Chroma, an open-source vector database that stores embeddings and lets you run similarity searches (kNN). Chroma here is LangChain’s integration, not raw ChromaDB API.
-from langchain.schema import Document
+from langchain.schema import Document                                                                # List of LangChain `Document` objects (from `loader.py`).
 from typing import List
+import os
 
-def create_vectorstore(
-    chunks: List[Document],                                                                          # List of LangChain `Document` objects (from `loader.py`).
+
+def load_or_create_vectorstore(
+    chunks: List[Document] = None,
     model_name: str = "all-MiniLM-L6-v2",                                                            # A small, fast sentence-transformer model, 384-dim embeddings, You can replace with larger models (e.g., `"all-mpnet-base-v2"`).  
-    persist_directory: str = "db"                                                                    # Directory where Chroma will save the database files. Default `"db"`.  
+    persist_directory: str = "db"                                                                    # Directory where Chroma will save the database files. Default `"db"`. 
 ) -> Chroma:
     """
-    Create embeddings and initialize a Chroma vectorstore.
+    Load an existing Chroma vectorstore if it exists,
+    otherwise create it from the provided chunks.
 
     Args:
-        chunks (List[Document]): List of document chunks from loader.
-        model_name (str): Embedding model name.
-        persist_directory (str): Directory to save the vectorstore.
+        chunks (List[Document], optional): Document chunks from loader.
+            Required only when creating a new DB.
+        model_name (str): HuggingFace embedding model.
+        persist_directory (str): Directory where DB is stored.
 
     Returns:
         Chroma: Vectorstore instance.
     """
     embeddings = HuggingFaceEmbeddings(model_name=model_name)                                        # Each text chunk will be fed into this model → returns a vector of floats. 
-    vectordb = Chroma.from_documents(chunks, embeddings, persist_directory=persist_directory)        # 1) Runs `embeddings` on each `Document.page_content`, 2) Stores the resulting vectors + document metadata in the Chroma DB, 3) Saves DB files into `persist_directory`. Note: If `"db"` exists, Chroma will load from it; if not, it creates it. This makes your embeddings persistent across runs.
 
+    # Case 1: DB already exists -> just load it
+    if os.path.exists(os.path.join(persist_directory, "index")):
+        vectordb = Chroma(
+            persist_directory=persist_directory,
+            embedding_function=embeddings
+        )
+        print(f"Loaded existing vectorstore from {persist_directory}")
+        return vectordb
+
+    # Case 2: No DB yet -> need chunks to build it
+    if chunks is None:
+        raise ValueError(
+            "No existing DB found and no chunks provided to create one."
+        )
+
+    vectordb = Chroma.from_documents(                                                                # 1) Runs `embeddings` on each `Document.page_content`, 2) Stores the resulting vectors + document metadata in the Chroma DB, 3) Saves DB files into `persist_directory`. Note: If `"db"` exists, Chroma will load from it; if not, it creates it. This makes your embeddings persistent across runs.
+        chunks,
+        embeddings,                                                                                                        
+        persist_directory=persist_directory
+    )
+    print(f"Created new vectorstore at {persist_directory}")
     return vectordb                                                                                  # Returns the Chroma vector DB instance, which will be used in later steps for retrieval during QA.
-
