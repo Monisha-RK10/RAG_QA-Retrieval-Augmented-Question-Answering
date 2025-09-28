@@ -1,5 +1,5 @@
 # app/fastapi_app.py
-# Production tweak #5: Model caching at startup, load LLM once at startup (FastAPI app startup).
+# Production tweak #7: Model caching at startup, load LLM once at startup (FastAPI app startup).
 # Production tweak #8: Timeouts for query endpoints.
 
 import asyncio
