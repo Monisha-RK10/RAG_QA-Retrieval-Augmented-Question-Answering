@@ -53,11 +53,11 @@ def build_qa_chain(llm: LLM, vectordb: BaseRetriever, k: int = 3, metadata_filte
     """
     search_kwargs = {"k": 3}
     if metadata_filter:
-        search_kwargs["filter"] = metadata_filter   # only add if non-empty
+        search_kwargs["filter"] = metadata_filter                                                                 # Only pass filter when you actually have metadata to filter on. Else, ValueError: Expected where to have exactly one operator, got {}
     retriever = vectordb.as_retriever(
         search_type="similarity", 
         search_kwargs=search_kwargs
-    )                                                                                                         # Uses similarity search, top-3 docs.
+    )                                                                                                             # Uses similarity search, top-3 docs.
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,                                                                                                  # LLM itself (loaded in llm.py)
         retriever=retriever,                                                                                      # Retriever wrapping the vector DB (from embeddings.py)
