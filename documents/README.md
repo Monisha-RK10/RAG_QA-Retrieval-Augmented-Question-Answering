@@ -1,4 +1,4 @@
-# Process (prototype → modular → production tweaks)
+# Process (Prototype → Modular → Production Tweaks → Testing & FastAPI Serving)
 
 ### 1. Prototype stage → get something working end-to-end, even if rough (one PDF, no modularity, no caching).
 
