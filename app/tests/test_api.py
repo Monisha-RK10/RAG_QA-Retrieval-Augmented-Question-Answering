@@ -1,7 +1,8 @@
 # app/tests/test_api.py
 
-# test_pipeline = unit/integration test of the pipeline internals.
-# test_query_endpoint = API layer test of FastAPI + pipeline integration.
+# test_pipeline = unit/integration test of the pipeline internals, checks the internal pipeline works (PDF → embeddings → vector DB → LLM → QA chain).
+# test_query_endpoint = API layer test of FastAPI + pipeline integration, checks /query works with the persisted/default RAG_Paper.pdf.
+# test_query_timeout → checks the timeout works correctly (monkeypatch simulates a slow chain).
 
 import asyncio
 import pytest
