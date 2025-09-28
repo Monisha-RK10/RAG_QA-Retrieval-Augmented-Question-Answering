@@ -31,7 +31,13 @@
 - Extended `build_qa_chain` to optionally accept filters, so it works in two modes:
   - Default: Just retrieves top-k chunks.
   - With filter: Only retrieves chunks that match metadata conditions.
-    
-### 7. Timeouts (in FastAPI /query endpoint)
+
+### 7. Guardrails via prompt instructions (in QA_PROMPT).
+- Guardrails in RAG = rules put in place to:
+  - Control style (2–3 sentences, full stop).
+  - Control content (no hallucinated emails, citations, links).
+  - Control failure mode (“I don’t know from the document.”).
+
+### 8. Timeouts (in FastAPI /query endpoint)
 - Add timeout per query (avoid hanging requests).
   
