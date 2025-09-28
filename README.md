@@ -27,6 +27,11 @@
  - Avoids repeated heavy initialization.
  - **Cached the LLM pipeline at app startup, so inference requests reuse the same model object, reducing latency**
 
-### 6. Timeouts (in FastAPI /query endpoint)
+### 6. Metadata filtering (in chain.py).
+- Extended `build_qa_chain` to optionally accept filters, so it works in two modes:
+  - Default: Just retrieves top-k chunks.
+  - With filter: Only retrieves chunks that match metadata conditions.
+    
+### 7. Timeouts (in FastAPI /query endpoint)
 - Add timeout per query (avoid hanging requests).
   
