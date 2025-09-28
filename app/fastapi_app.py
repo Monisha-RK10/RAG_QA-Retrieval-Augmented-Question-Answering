@@ -1,12 +1,12 @@
 # app/fastapi_app.py
 # Production tweak #5: Model caching at startup, load LLM once at startup (FastAPI app startup).
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI, UploadFile, File, HTTPException                                          # Import framework to serve RAG system as an HTTP API, upload files (PDFs), clean error responses
+from fastapi.responses import JSONResponse                                                            # Consistent JSON replies.
 from pathlib import Path
-from pydantic import BaseModel
+from pydantic import BaseModel                                                                        # Pydantic model for request validation.
 
-from app.loader import load_and_chunk_pdf
+from app.loader import load_and_chunk_pdf                                                             # Modular pieces of code
 from app.embeddings import load_or_create_vectorstore
 from app.llm import load_llm
 from app.chain import build_qa_chain
@@ -16,29 +16,29 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 # --------------------------
 # Config & Directories
 # --------------------------
-DATA_DIR = Path("data")
+DATA_DIR = Path("data")                                                                               # Ensures data/ for PDFs and db/ for vector DB exist.
 DB_DIR = Path("db")
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR.mkdir(exist_ok=True)                                                                         # Avoids crash if directories already exist
 DB_DIR.mkdir(exist_ok=True)
 
-EMBEDDING_MODEL = "all-MiniLM-L6-v2"
-embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+EMBEDDING_MODEL = "all-MiniLM-L6-v2"                                                                  # Picking a small, fast embedding model.
+embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)                                        # embeddings object gets reused everywhere → avoids repeated initialization.
 
 # --------------------------
 # FastAPI App
 # --------------------------
-app = FastAPI(title="RAG API")
+app = FastAPI(title="RAG API")                                                                        # Defines the API server, with docs automatically generated at /docs
 
 # --------------------------
 # Load LLM once at startup
 # --------------------------
-llm = load_llm()
+llm = load_llm()                                                                                      # Without this, every query would reload the model = huge latency hit.
 
 # --------------------------
 # Load persisted vectorstore or create from default PDF
 # --------------------------
 default_pdf = DATA_DIR / "RAG_Paper.pdf"
-if DB_DIR.exists() and any(DB_DIR.iterdir()):
+if DB_DIR.exists() and any(DB_DIR.iterdir()):                                                         # Checks 3 cases: If a persisted DB exists → reload it (fast startup), Else if a default PDF exists → create a new DB, Else → no DB (wait for upload). This is smart fallback design (Production tweak #4).                                                      
     vectordb = Chroma(
         persist_directory=str(DB_DIR),
         embedding_function=embeddings
