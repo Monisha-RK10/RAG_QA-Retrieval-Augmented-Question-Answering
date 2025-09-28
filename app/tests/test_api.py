@@ -1,3 +1,5 @@
+# app/tests/test_api.py
+
 from fastapi.testclient import TestClient
 from app.fastapi_app import app
 from app.loader import load_and_chunk_pdf
