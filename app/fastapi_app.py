@@ -32,7 +32,7 @@ app = FastAPI(title="RAG API")                                                  
 # --------------------------
 # Load LLM once at startup
 # --------------------------
-llm = load_llm()                                                                                      # Without this, every query would reload the model = huge latency hit.
+llm = load_llm()                                                                                      # Production tweak #5: Model caching at startup, without this, every query would reload the model = huge latency hit.
 
 # --------------------------
 # Load persisted vectorstore or create from default PDF
