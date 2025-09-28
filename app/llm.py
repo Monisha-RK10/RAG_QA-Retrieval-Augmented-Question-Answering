@@ -1,6 +1,5 @@
 # app/llm.py
-# Step 3: Load LLM
-# Seq2Seq (Flan-T5)
+# Step 3: Load LLM (Seq2Seq, Flan-T5)
 
 # Production tweak #2: Quantization for faster inference [Two methods: 1) HF Transformers built-in int8 loading (needs bitsandbytes) + 2) Torch compile (PyTorch 2.0+)
 # Production tweak #3: Batch inference for higher throughput
