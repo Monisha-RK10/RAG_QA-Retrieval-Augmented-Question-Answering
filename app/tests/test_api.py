@@ -40,7 +40,6 @@ def test_pipeline():                                                            
    # assert "Abstractive" in result["result"].lower(), "Unexpected answer"                                # Commented out because it was too strict
     assert result["result"], "QA chain returned empty answer"
 
-
 # Test FastAPI /query endpoint                                                                            # Test 2: FastAPI endpoint (end-to-end API test), mimics a real client calling the API
 def test_query_endpoint():
     response = client.post("/query", json={"question": "What is Abstractive Question Answering?"})
