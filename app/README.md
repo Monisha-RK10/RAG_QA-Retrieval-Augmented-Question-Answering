@@ -3,8 +3,8 @@
 ## Scripts Overview
 
 - `loader.py` → Loads PDFs, chunks text, filters out irrelevant sections.
-- `embeddings.py` → Creates or loads persisted vectorstores (Chroma + embeddings).
-- `llm.py` → Loads the language model, with caching + quantization optimizations.
+- `embeddings.py` → Creates or loads persisted vectorstores (Chroma + embeddings) i.e., Production tweak #1.
+- `llm.py` → Loads the language model, with quantization (int8 & compile) optimizations + batch inference + fallback strategy i.e., Production tweak #2, #3, #4 .
 - `chain.py` → Builds the QA chain (Retriever + LLM + optional metadata filtering).
 - `fastapi_app.py` → FastAPI server exposing API endpoints:
   - `/query` → Ask questions against existing vectorstore with timeout.
