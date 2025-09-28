@@ -120,3 +120,14 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
         raise HTTPException(status_code=504, detail="Query timed out after 30s")
 
     return JSONResponse({"answer": result["result"]})
+
+# --------------------------
+# Health Check Endpoint
+# --------------------------
+@app.get("/health")
+async def health_check():
+    """
+    Simple health check endpoint for monitoring and orchestration systems.
+    Returns 200 OK if the API is alive and ready.
+    """
+    return {"status": "ok"}
