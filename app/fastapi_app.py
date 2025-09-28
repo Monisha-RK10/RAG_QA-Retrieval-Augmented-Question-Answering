@@ -53,19 +53,19 @@ else:
 # --------------------------
 # Build QA chain if vectordb exists
 # --------------------------
-qa_chain = build_qa_chain(llm, vectordb) if vectordb else None
+qa_chain = build_qa_chain(llm, vectordb) if vectordb else None                                        # Builds the LangChain chain (LLM + retriever), only initializes if a DB is present.
 
 # --------------------------
 # Pydantic Model for Query
 # --------------------------
-class QueryRequest(BaseModel):
+class QueryRequest(BaseModel):                                                                        # Enforces input validation → if user sends bad JSON, FastAPI rejects it automatically.
     question: str
 
 # --------------------------
 # API Endpoints
 # --------------------------
 @app.post("/query")
-async def query_document(request: QueryRequest):
+async def query_document(request: QueryRequest):                                                      # Test 1: /query with a known PDF, For questions on the already-loaded or persisted knowledge base. Example: The system already has RAG_Paper.pdf embedded. User just asks: “What are the limitations?”, Faster → no upload step.
     """
     Run a question against the persisted vectorstore.
     """
@@ -79,7 +79,7 @@ async def query_document(request: QueryRequest):
     return {"answer": result["result"]}
 
 
-@app.post("/upload_query")
+@app.post("/upload_query")                                                                            # Test 2: /upload_query with an uploaded PDF, For ad-hoc queries on a new document. Example: User uploads “invoice.pdf” and immediately asks: “What’s the total amount due?” This workflow combines upload + embedding + query into one request.
 async def upload_query(file: UploadFile = File(...), question: str = ""):
     """
     Upload a PDF, embed it, and immediately run a query.
