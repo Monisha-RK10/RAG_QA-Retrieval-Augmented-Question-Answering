@@ -6,7 +6,7 @@
 - `embeddings.py` → Creates or loads persisted vectorstores (Chroma + embeddings) i.e., **Production tweak #1**.
 - `llm.py` → Loads the language model, with quantization (int8 & compile) optimizations + batch inference + fallback strategy i.e., **Production tweak #2, #3, #4**.
 - `chain.py` → Builds the QA chain (Retriever + LLM + optional metadata filtering + guardrails via prompt instructions) i.e., **Production tweak #5, #6**.
-- `fastapi_app.py` → FastAPI server exposing API endpoints:
+- `fastapi_app.py` → FastAPI server exposing API endpoints with model caching + timeouts i.e., ****Production tweak #7, #8**:
   - `/query` → Ask questions against existing vectorstore with timeout.
   - `/upload_query` → Upload a new PDF + immediately query it with timeout.
   - `/health` → Service availability + DB status check.
