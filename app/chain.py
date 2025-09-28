@@ -8,6 +8,11 @@
 # This structured input goes into the LLM (llm.py).
 # Output: Answer (shaped by template rules) + Source docs (for traceability).
 
+# Guardrails in RAG = rules put in place to:
+# Control style (2–3 sentences, full stop).
+# Control content (no hallucinated emails, citations, links).
+# Control failure mode (“I don’t know from the document.”).
+
 from langchain.chains import RetrievalQA
 from langchain import PromptTemplate
 from langchain.schema import BaseRetriever
