@@ -51,10 +51,13 @@ def build_qa_chain(llm: LLM, vectordb: BaseRetriever, k: int = 3, metadata_filte
         metadata_filter (dict, optional): Metadata filter for narrowing search (e.g., {"section": "Introduction"}).
         
     """
+    search_kwargs = {"k": 3}
+    if metadata_filter:
+        search_kwargs["filter"] = metadata_filter   # only add if non-empty
     retriever = vectordb.as_retriever(
         search_type="similarity", 
-        search_kwargs={"k": k, "filter": metadata_filter or {}}
-    )                                                                                                             # Uses similarity search, top-3 docs.
+        search_kwargs=search_kwargs
+    )                                                                                                         # Uses similarity search, top-3 docs.
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,                                                                                                  # LLM itself (loaded in llm.py)
         retriever=retriever,                                                                                      # Retriever wrapping the vector DB (from embeddings.py)
