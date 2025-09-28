@@ -14,6 +14,7 @@ from langchain.chains import RetrievalQA
 from langchain import PromptTemplate
 from langchain.schema import BaseRetriever
 from langchain.llms.base import LLM
+
 # Defines style & constraints of LLM answers (fact-based, complete sentences).
 template = """You are an expert assistant answering questions based only on the provided context.        
 
