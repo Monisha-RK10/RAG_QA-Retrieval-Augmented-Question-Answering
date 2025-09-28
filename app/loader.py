@@ -37,9 +37,9 @@ def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int 
     for chunk in chunks:
         page = chunk.metadata.get("page", None)
         if page is not None:
-            if page <= 2:
+            if page <= 1:
                 chunk.metadata["section"] = "Introduction"
-            elif page <= 5:
+            elif page <= 3:
                 chunk.metadata["section"] = "Methods"
             else:
                 chunk.metadata["section"] = "Results"
