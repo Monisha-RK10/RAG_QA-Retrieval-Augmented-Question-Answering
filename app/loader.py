@@ -33,5 +33,16 @@ def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int 
     splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size, chunk_overlap=chunk_overlap)              # Recursive splitter attempts to split on natural boundaries (double newlines, sentences, punctuation) before falling back to character splits.
     chunks = splitter.split_documents(filtered_docs)
 
+    # ---- Add metadata ----
+    for chunk in chunks:
+        page = chunk.metadata.get("page", None)
+        if page is not None:
+            if page <= 1:
+                chunk.metadata["section"] = "Introduction"
+            elif page <= 3:
+                chunk.metadata["section"] = "Methods"
+            else:
+                chunk.metadata["section"] = "Results"
+
     print(f"Total chunks after filtering: {len(chunks)}")
     return chunks
