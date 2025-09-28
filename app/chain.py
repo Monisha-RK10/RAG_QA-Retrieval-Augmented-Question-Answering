@@ -1,7 +1,7 @@
 # app/chain.py
 # Step 4: Prompt integration + Flexible retrieval
-# Production tweak #6: Metadata filtering support
-# Production tweak #7: Guardrails via prompt instructions (in QA_PROMPT).
+# Production tweak #5: Metadata filtering support
+# Production tweak #6: Guardrails via prompt instructions (in QA_PROMPT).
 
 # Context flow (the retrieval → generation loop of RAG):
 # User asks a question → passed into qa_chain.
