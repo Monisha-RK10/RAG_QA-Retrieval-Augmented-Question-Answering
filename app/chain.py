@@ -1,5 +1,6 @@
 # app/chain.py
 # Step 4: Prompt integration + Flexible retrieval
+# Production tweak #6: Metadata filtering support
 
 # Context flow (the retrieval → generation loop of RAG):
 # User asks a question → passed into qa_chain.
@@ -17,8 +18,8 @@ from langchain.chains import RetrievalQA
 from langchain import PromptTemplate
 from langchain.schema import BaseRetriever
 from langchain.llms.base import LLM
-
-template = """You are an expert assistant answering questions based only on the provided context.        # Defines style & constraints of LLM answers (fact-based, complete sentences).
+# Defines style & constraints of LLM answers (fact-based, complete sentences).
+template = """You are an expert assistant answering questions based only on the provided context.        
 
 Instructions:
 - Always answer in 2–3 full sentences, clearly and factually.
@@ -37,17 +38,27 @@ Answer:"""
 
 
 
-QA_PROMPT = PromptTemplate.from_template(template)                                                       # LangChain’s PromptTemplate wrapper.
+QA_PROMPT = PromptTemplate.from_template(template)                                                                # LangChain’s PromptTemplate wrapper.
 
-def build_qa_chain(llm: LLM, vectordb: BaseRetriever, k: int = 3) -> RetrievalQA:                        # Wraps LLM + retriever into a RetrievalQA chain
+def build_qa_chain(llm: LLM, vectordb: BaseRetriever, k: int = 3, metadata_filter: dict = None) -> RetrievalQA:   # Wraps LLM + retriever into a RetrievalQA chain                     
     """
     Build a RetrievalQA chain from the LLM and vector database.
+
+    Args:
+        llm (LLM): The language model.
+        vectordb (BaseRetriever): The vector database retriever.
+        k (int): Number of top chunks to retrieve.
+        metadata_filter (dict, optional): Metadata filter for narrowing search (e.g., {"section": "Introduction"}).
+        
     """
-    retriever = vectordb.as_retriever(search_type="similarity", search_kwargs={"k": k})                  # Uses similarity search, top-3 docs.
+    retriever = vectordb.as_retriever(
+        search_type="similarity", 
+        search_kwargs={"k": k, "filter": metadata_filter or {}}
+    )                                                                                                             # Uses similarity search, top-3 docs.
     qa_chain = RetrievalQA.from_chain_type(
-        llm=llm,                                                                                         # LLM itself (loaded in llm.py)
-        retriever=retriever,                                                                             # Retriever wrapping the vector DB (from embeddings.py)
-        return_source_documents=True,                                                                    # Returns both answer + source documents (important for transparency).
-        chain_type_kwargs={"prompt": QA_PROMPT}                                                          # Injects the custom prompt template
+        llm=llm,                                                                                                  # LLM itself (loaded in llm.py)
+        retriever=retriever,                                                                                      # Retriever wrapping the vector DB (from embeddings.py)
+        return_source_documents=True,                                                                             # Returns both answer + source documents (important for transparency).
+        chain_type_kwargs={"prompt": QA_PROMPT}                                                                   # Injects the custom prompt template
     )
     return qa_chain
