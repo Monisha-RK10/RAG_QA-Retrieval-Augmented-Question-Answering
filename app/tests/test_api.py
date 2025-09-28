@@ -63,3 +63,9 @@ def test_query_timeout(monkeypatch):
     response = client.post("/query", json={"question": "Will this timeout?"})
     assert response.status_code == 504
     assert response.json()["detail"] == "Query timed out after 30s"
+
+# Test FastAPI /health endpoint
+def test_health():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
