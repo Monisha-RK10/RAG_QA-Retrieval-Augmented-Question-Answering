@@ -27,12 +27,12 @@
  - Avoids repeated heavy initialization.
  - **Cached the LLM pipeline at app startup, so inference requests reuse the same model object, reducing latency**
 
-### 6. Metadata filtering (in chain.py).
+### 6. Metadata Filtering (in chain.py).
 - Extended `build_qa_chain` to optionally accept filters, so it works in two modes:
   - Default: Just retrieves top-k chunks.
   - With filter: Only retrieves chunks that match metadata conditions.
 
-### 7. Guardrails via prompt instructions (in QA_PROMPT).
+### 7. Guardrails via Prompt Instructions (in QA_PROMPT).
 - Guardrails in RAG = rules put in place to:
   - Control style (2–3 sentences, full stop).
   - Control content (no hallucinated emails, citations, links).
