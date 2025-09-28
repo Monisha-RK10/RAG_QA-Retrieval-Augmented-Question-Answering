@@ -1,6 +1,5 @@
 # app/embeddings.py
-# Step 2: Embedding
-# Create Embeddings and Vector DB
+# Step 2: Create Embeddings and Vector DB
 
 # Production tweak #1: Vector DB persistence, ensures embeddings are computed once and reused across runs.
 
