@@ -77,7 +77,7 @@ async def query_document(request: QueryRequest):                                
             detail="No vectorstore found. Upload a PDF first."
         )
 
-     try:
+    try:
         result = await asyncio.wait_for(
             asyncio.to_thread(qa_chain, {"query": request.question}),
             timeout=30
