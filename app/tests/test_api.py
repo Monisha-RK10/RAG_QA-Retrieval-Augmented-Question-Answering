@@ -3,7 +3,7 @@
 # test_pipeline = unit/integration test of the pipeline internals, checks the internal pipeline works (PDF → embeddings → vector DB → LLM → QA chain).
 # test_query_endpoint = API layer test of FastAPI + pipeline integration, checks /query works with the persisted/default RAG_Paper.pdf.
 # test_query_timeout → checks the timeout works correctly (monkeypatch simulates a slow chain).
-# test_health (API)
+# test_health (API) = Monitoring, services like Kubernetes, Docker, AWS ELB, etc. hit /health to check if the app is alive.
 # test_upload_query (API with file upload)
 
 import asyncio
