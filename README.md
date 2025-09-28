@@ -41,3 +41,13 @@
 ### 8. Timeouts (in FastAPI /query endpoint)
 - Add timeout per query (avoid hanging requests).
   
+----
+
+## Future Production Steps
+
+- Containerization (Docker) and maybe orchestration (Kubernetes)
+- Monitoring/logging (Prometheus, Grafana, or even just better logs)
+- Deployment pipeline (CI/CD with GitHub Actions, AWS/GCP/Azure hosting)
+- Auth/security for endpoints
+- Load testing (e.g. locust or k6)
+- Scaling (workers, async inference, caching)
