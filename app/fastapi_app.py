@@ -1,6 +1,8 @@
 # app/fastapi_app.py
 # Production tweak #5: Model caching at startup, load LLM once at startup (FastAPI app startup).
+# Production tweak #8: Timeouts for query endpoints.
 
+import asyncio
 from fastapi import FastAPI, UploadFile, File, HTTPException                                          # Import framework to serve RAG system as an HTTP API, upload files (PDFs), clean error responses
 from fastapi.responses import JSONResponse                                                            # Consistent JSON replies.
 from pathlib import Path
@@ -67,7 +69,7 @@ class QueryRequest(BaseModel):                                                  
 @app.post("/query")
 async def query_document(request: QueryRequest):                                                      # Test 1: /query with a known PDF, For questions on the already-loaded or persisted knowledge base. Example: The system already has RAG_Paper.pdf embedded. User just asks: “What are the limitations?”, Faster → no upload step.
     """
-    Run a question against the persisted vectorstore.
+    Run a question against the persisted vectorstore with timeout.
     """
     if not vectordb or not qa_chain:
         raise HTTPException(
@@ -75,14 +77,20 @@ async def query_document(request: QueryRequest):                                
             detail="No vectorstore found. Upload a PDF first."
         )
 
-    result = qa_chain({"query": request.question})
-    return {"answer": result["result"]}
+     try:
+        result = await asyncio.wait_for(
+            asyncio.to_thread(qa_chain, {"query": request.question}),
+            timeout=30
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Query timed out after 30s")
 
+    return {"answer": result["result"]}
 
 @app.post("/upload_query")                                                                            # Test 2: /upload_query with an uploaded PDF, For ad-hoc queries on a new document. Example: User uploads “invoice.pdf” and immediately asks: “What’s the total amount due?” This workflow combines upload + embedding + query into one request.
 async def upload_query(file: UploadFile = File(...), question: str = ""):
     """
-    Upload a PDF, embed it, and immediately run a query.
+    Upload a PDF, embed it, and immediately run a query with timeout.
     """
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
@@ -103,6 +111,12 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
     # Build QA chain for this PDF
     qa_chain_local = build_qa_chain(llm, vectordb_local)
 
-    # Run query
-    result = qa_chain_local({"query": question})
+    try:
+        result = await asyncio.wait_for(                                                              # Enforces timeout.
+            asyncio.to_thread(qa_chain_local, {"query": question}),                                   # Runs blocking code in a separate thread.
+            timeout=30
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Query timed out after 30s")
+
     return JSONResponse({"answer": result["result"]})
