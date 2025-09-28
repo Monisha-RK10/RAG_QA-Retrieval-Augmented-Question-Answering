@@ -22,21 +22,21 @@
    - Large model too slow → use flan-t5-base
  - **Added a timeout for robustness, and if the GPU is overloaded, fall back to a smaller CPU model for graceful degradation**
 
- ### 5. Model Caching (in fastapi_app.py)
- - Load LLM once at startup (FastAPI app startup).
- - Avoids repeated heavy initialization.
- - **Cached the LLM pipeline at app startup, so inference requests reuse the same model object, reducing latency**
-
-### 6. Metadata Filtering (in chain.py).
+### 5. Metadata Filtering (in chain.py).
 - Extended `build_qa_chain` to optionally accept filters, so it works in two modes:
   - Default: Just retrieves top-k chunks.
   - With filter: Only retrieves chunks that match metadata conditions.
 
-### 7. Guardrails via Prompt Instructions (in QA_PROMPT).
+### 6. Guardrails via Prompt Instructions (in QA_PROMPT).
 - Guardrails in RAG = rules put in place to:
   - Control style (2–3 sentences, full stop).
   - Control content (no hallucinated emails, citations, links).
   - Control failure mode (“I don’t know from the document.”).
+
+ ### 7. Model Caching (in fastapi_app.py)
+ - Load LLM once at startup (FastAPI app startup).
+ - Avoids repeated heavy initialization.
+ - **Cached the LLM pipeline at app startup, so inference requests reuse the same model object, reducing latency**
 
 ### 8. Timeouts (in FastAPI /query endpoint)
 - Add timeout per query (avoid hanging requests).
