@@ -3,6 +3,9 @@
 # test_pipeline = unit/integration test of the pipeline internals.
 # test_query_endpoint = API layer test of FastAPI + pipeline integration.
 
+import asyncio
+import pytest
+
 from fastapi.testclient import TestClient                                                                 # FastAPI’s built-in testing utility. It spins up the app in memory so you can send HTTP requests without running a real server.
 from app.fastapi_app import app                                                                           # Imports the FastAPI app instance created
 from app.loader import load_and_chunk_pdf
@@ -41,3 +44,19 @@ def test_query_endpoint():
     #print("API response:", response.json())
     assert response.status_code == 200
     print(response.json())
+
+# Test FastAPI for timeout 
+def test_query_timeout(monkeypatch):
+    # Monkeypatch qa_chain to simulate a long-running query
+    from app.fastapi_app import qa_chain
+
+    def slow_chain(_):
+        # Simulate 35s blocking work
+        import time; time.sleep(35)
+        return {"result": "This should never return"}
+
+    monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
+
+    response = client.post("/query", json={"question": "Will this timeout?"})
+    assert response.status_code == 504
+    assert response.json()["detail"] == "Query timed out after 30s"
