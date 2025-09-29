@@ -1,3 +1,50 @@
+# Retrieval-Augmented Generation (RAG) QA System
+
+This project implements a Retrieval-Augmented Generation (RAG) pipeline for question answering over PDFs.
+It combines vector search + large language models and serves results via a FastAPI backend.
+
+Blog post (concept + pipeline walkthrough):
+
+[RAG Pipeline for Travel Data](https://medium.com/@monishatemp20/rag-2-rag-pipeline-for-travel-data-part-1-41abe0fea2b1)
+
+## Pipeline Overview
+
+- Loader → Parse & chunk PDFs into text passages.
+- Embeddings + Vector DB → Encode passages, persist them in Chroma.
+- Retriever → Retrieve top-k relevant chunks per query.
+- LLM → Answer using retrieved context (Flan-T5, quantized for efficiency).
+- FastAPI Server → Expose /query, /upload_query, /health endpoints.
+
+## Project Structure
+
+RAG_QA/
+│── app/
+│   ├── loader.py        # PDF loading + chunking
+│   ├── embeddings.py    # Embeddings + Chroma vectorstore
+│   ├── llm.py           # LLM loading + quantization
+│   ├── chain.py         # RAG pipeline (retriever + LLM chain)
+│   ├── fastapi_app.py   # API endpoints
+│   └── tests/
+│       └── test_api.py  # Unit + integration tests
+│
+│── documents/           # Example PDFs
+│── db/                  # Persisted vectorstore
+│── data/                # Temp data / scratch
+│── requirements.txt
+│── README.md (this file)
+
+
+## Production Tweaks Implemented
+
+- Vector DB Caching → Persist embeddings once, reuse later.
+- Quantization + Torch Compile → Faster inference, lower memory.
+- Batch Inference → Process multiple queries in parallel.
+- Fallback Models → Graceful degradation if GPU unavailable.
+- Metadata Filtering → Restrict retrieval by document metadata.
+- Prompt Guardrails → Style/content control, safe fallback answers.
+- Model Caching at Startup → No repeated heavy init per request.
+- Timeouts → Prevent hanging requests.
+  
 ## Production Tweaks
 
 ### 1. Vector DB Caching (in embeddings.py)
