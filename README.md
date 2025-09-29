@@ -37,14 +37,14 @@ RAG_QA/
 ```
 ## Production Tweaks Implemented
 
-- 1. **Vector DB Caching** → Persist embeddings once, reuse later.
-- 2. **Quantization + Torch Compile** → Faster inference, lower memory.
-- 3. **Batch Inference** → Process multiple queries in parallel.
-- 4. **Fallback Models** → Graceful degradation if GPU unavailable.
-- 5. **Metadata Filtering** → Restrict retrieval by document metadata.
-- 6. **Prompt Guardrails** → Style/content control, safe fallback answers.
-- 7. **Model Caching at Startup** → No repeated heavy init per request.
-- 8. **Timeouts** → Prevent hanging requests.
+1. **Vector DB Caching** → Persist embeddings once, reuse later.
+2. **Quantization + Torch Compile** → Faster inference, lower memory.
+3. **Batch Inference** → Process multiple queries in parallel.
+4. **Fallback Models** → Graceful degradation if GPU unavailable.
+5. **Metadata Filtering** → Restrict retrieval by document metadata.
+6. **Prompt Guardrails** → Style/content control, safe fallback answers.
+7. **Model Caching at Startup** → No repeated heavy init per request.
+8. **Timeouts** → Prevent hanging requests.
   
 ## Future Steps
 
