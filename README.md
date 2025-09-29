@@ -17,6 +17,7 @@ Blog post (concept + pipeline walkthrough):
 
 ## Project Structure
 
+```
 RAG_QA/
 │── app/
 │   ├── loader.py        # PDF loading + chunking
@@ -33,7 +34,7 @@ RAG_QA/
 │── requirements.txt
 │── README.md (this file)
 
-
+```
 ## Production Tweaks Implemented
 
 - Vector DB Caching → Persist embeddings once, reuse later.
