@@ -45,7 +45,17 @@ RAG_QA/
 6. **Prompt Guardrails** → Style/content control, safe fallback answers.
 7. **Model Caching at Startup** → No repeated heavy init per request.
 8. **Timeouts** → Prevent hanging requests.
-  
+
+## Output
+
+### Example Queries & Responses
+
+**Q:** What is seq2seq model?  
+**A:** It treats the retrieved document as a single latent variable that is marginalized...
+
+**Q:** What is Abstractive Question Answering?  
+**A:** RAG models can go beyond simple extractive QA and answer questions with free-form...
+ 
 ## Future Steps
 
 - Containerization (Docker, Kubernetes)
