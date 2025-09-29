@@ -50,11 +50,12 @@ RAG_QA/
 
 ### Example Queries & Responses
 
-**Q:** What is seq2seq model?  
-**A:** It treats the retrieved document as a single latent variable that is marginalized...
+**Q:** What is Effect of Retrieving more documents?  
+**A:** improves documents, and we do not observe significant differences in performance between them. We have the flexibility to adjust the number of retrieved documents at test time, which can affect performance and runtime.
 
-**Q:** What is Abstractive Question Answering?  
-**A:** RAG models can go beyond simple extractive QA and answer questions with free-form...
+**Q:** What is seq2seq model?
+**A:** p(y|x) via a top-K approximation. Concretely, the top K documents are retrieved using the retriever, and the generator produces the output sequence probability for each document, which are then marginalized.
+
  
 ## Future Steps
 
