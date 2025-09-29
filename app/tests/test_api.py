@@ -70,20 +70,25 @@ def test_health():
     assert response.json() == {"status": "ok"}
 
 # Test FastAPI /upload_query endpoint
+from reportlab.pdfgen import canvas
+
+def create_valid_pdf(path):
+    c = canvas.Canvas(str(path))
+    c.drawString(100, 750, "Hello, this is a test PDF.")
+    c.save()
+
 def test_upload_query(tmp_path):
-    # Create a temporary fake PDF
-    pdf_path = tmp_path / "fake.pdf"
-    pdf_path.write_bytes(b"%PDF-1.4 fake PDF content for testing")
+    pdf_path = tmp_path / "valid.pdf"
+    create_valid_pdf(pdf_path)
 
     with open(pdf_path, "rb") as f:
         response = client.post(
             "/upload_query",
-            files={"file": ("fake.pdf", f, "application/pdf")},
+            files={"file": ("valid.pdf", f, "application/pdf")},
             data={"question": "What is the purpose of this test?"}
         )
 
-    # Assertions
-    assert response.status_code == 200, f"Unexpected status: {response.status_code}"
+    assert response.status_code == 200
     json_resp = response.json()
     print("Upload query response:", json_resp)
     assert "answer" in json_resp
