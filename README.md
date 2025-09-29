@@ -7,6 +7,8 @@ Blog post (concept + pipeline walkthrough):
 
 [RAG Pipeline for Travel Data](https://medium.com/@monishatemp20/rag-2-rag-pipeline-for-travel-data-part-1-41abe0fea2b1)
 
+---
+
 ## Pipeline Overview
 
 - Loader → Parse & chunk PDFs into text passages.
@@ -14,6 +16,8 @@ Blog post (concept + pipeline walkthrough):
 - Retriever → Retrieve top-k relevant chunks per query.
 - LLM → Answer using retrieved context (Flan-T5, quantized for efficiency).
 - FastAPI Server → Expose /query, /upload_query, /health endpoints.
+
+---
 
 ## Project Structure
 
@@ -46,9 +50,20 @@ RAG_QA/
 7. **Model Caching at Startup** → No repeated heavy init per request.
 8. **Timeouts** → Prevent hanging requests.
 
-## Output
+---
 
-### Example Queries & Responses
+## Future Steps
+
+- Containerization (Docker, Kubernetes)
+- Monitoring/logging (Prometheus, Grafana)
+- CI/CD deployment pipeline
+- Auth/security for endpoints
+- Load testing (locust, k6)
+- Async scaling for high throughput
+
+---
+ 
+## Output: Example Queries & Responses
 
 **Q: What is Effect of Retrieving more documents?**
 
@@ -63,13 +78,7 @@ RAG_QA/
 **A:** an important real-world application and common testbed for knowledge-intensive tasks. We treat questions and answers as input-output text pairs (x,y) data. We now discuss experimental details for each task.
 
 **Q: What is the advantage of Index hot-swapping?**
- 
-## Future Steps
 
-- Containerization (Docker, Kubernetes)
-- Monitoring/logging (Prometheus, Grafana)
-- CI/CD deployment pipeline
-- Auth/security for endpoints
-- Load testing (locust, k6)
-- Async scaling for high throughput
-  
+**A:** knowledge can be easily updated at test time. Parametric-only models like T5 or BART need further training to improves results on all other tasks, especially for Open-Domain QA, where it is crucial.
+
+---
