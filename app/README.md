@@ -17,4 +17,4 @@
 - `test_query_endpoint` → API test for /query.
 - `test_query_timeout` → Ensures queries timeout after 30s (robustness check).
 - `test_health` → API test for /health.
-- (coming next) `test_upload_query` → Simulate uploading a PDF + question to /upload_query.
+- `test_upload_query` → Simulate uploading a PDF + question to /upload_query.
