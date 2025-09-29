@@ -37,65 +37,21 @@ RAG_QA/
 ```
 ## Production Tweaks Implemented
 
-- Vector DB Caching → Persist embeddings once, reuse later.
-- Quantization + Torch Compile → Faster inference, lower memory.
-- Batch Inference → Process multiple queries in parallel.
-- Fallback Models → Graceful degradation if GPU unavailable.
-- Metadata Filtering → Restrict retrieval by document metadata.
-- Prompt Guardrails → Style/content control, safe fallback answers.
-- Model Caching at Startup → No repeated heavy init per request.
-- Timeouts → Prevent hanging requests.
+- 1. **Vector DB Caching** → Persist embeddings once, reuse later.
+- 2. **Quantization + Torch Compile** → Faster inference, lower memory.
+- 3. **Batch Inference** → Process multiple queries in parallel.
+- 4. **Fallback Models** → Graceful degradation if GPU unavailable.
+- 5. **Metadata Filtering** → Restrict retrieval by document metadata.
+- 6. **Prompt Guardrails** → Style/content control, safe fallback answers.
+- 7. **Model Caching at Startup** → No repeated heavy init per request.
+- 8. **Timeouts** → Prevent hanging requests.
   
-## Production Tweaks
+## Future Steps
 
-### 1. Vector DB Caching (in embeddings.py)
-- Don’t recompute embeddings on every run.
-- Persist them once (Chroma in "db" folder), reload if already there.
-- Saves huge compute costs in production.
-- **Cached embeddings in a persistent vector DB so they’re computed only once, queries just reuse it, which saves time and resources.**
-
-### 2. Quantization (in llm.py)
-- int8 quantization (bitsandbytes) → cuts GPU memory, improves latency.
-- Torch compile (PyTorch 2.0+) → graph optimization for faster inference.
-- **Applied `int8 quantization` or `torch.compile` to reduce memory footprint and speed up inference without major accuracy loss**
-
-### 3. Batch Inference (in llm.py)
-- Use batch_size=8 in Hugging Face pipeline.
-- Handles multiple queries in parallel, improving throughput under load
-- **Supported batched inference in the pipeline so multiple user queries can be processed in one forward pass**
-
- ### 4. Fallbacks (in llm.py)
- - Add fallback model:
-   - GPU busy → smaller CPU model.
-   - Large model too slow → use flan-t5-base
- - **Added a timeout for robustness, and if the GPU is overloaded, fall back to a smaller CPU model for graceful degradation**
-
-### 5. Metadata Filtering (in chain.py).
-- Extended `build_qa_chain` to optionally accept filters, so it works in two modes:
-  - Default: Just retrieves top-k chunks.
-  - With filter: Only retrieves chunks that match metadata conditions.
-
-### 6. Guardrails via Prompt Instructions (in QA_PROMPT).
-- Guardrails in RAG = rules put in place to:
-  - Control style (2–3 sentences, full stop).
-  - Control content (no hallucinated emails, citations, links).
-  - Control failure mode (“I don’t know from the document.”).
-
- ### 7. Model Caching (in fastapi_app.py)
- - Load LLM once at startup (FastAPI app startup).
- - Avoids repeated heavy initialization.
- - **Cached the LLM pipeline at app startup, so inference requests reuse the same model object, reducing latency**
-
-### 8. Timeouts (in FastAPI /query endpoint)
-- Add timeout per query (avoid hanging requests).
-  
-----
-
-## Future Production Steps
-
-- Containerization (Docker) and maybe orchestration (Kubernetes)
-- Monitoring/logging (Prometheus, Grafana, or even just better logs)
-- Deployment pipeline (CI/CD with GitHub Actions, AWS/GCP/Azure hosting)
+- Containerization (Docker, Kubernetes)
+- Monitoring/logging (Prometheus, Grafana)
+- CI/CD deployment pipeline
 - Auth/security for endpoints
-- Load testing (e.g. locust or k6)
-- Scaling (workers, async inference, caching)
+- Load testing (locust, k6)
+- Async scaling for high throughput
+  
