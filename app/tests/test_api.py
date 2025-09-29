@@ -42,7 +42,7 @@ def test_pipeline():                                                            
 
 # Test FastAPI /query endpoint                                                                            # Test 2: FastAPI endpoint (end-to-end API test), mimics a real client calling the API
 def test_query_endpoint():
-    response = client.post("/query", json={"question": "What is Effect of Retrieving more documents?"})
+    response = client.post("/query", json={"question": "What is seq2seq model?"})
     #print("API response:", response.json())
     assert response.status_code == 200
     print(response.json())
