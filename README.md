@@ -1,4 +1,4 @@
-# Retrieval-Augmented Generation (RAG) QA System
+#  RAG_QA: Retrieval-Augmented Question Answering 
 
 This project implements a Retrieval-Augmented Generation (RAG) pipeline for question answering over PDFs.
 It combines vector search + large language models and serves results via a FastAPI backend.
