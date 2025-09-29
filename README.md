@@ -51,13 +51,13 @@ RAG_QA/
 ### Example Queries & Responses
 
 **Q:** What is Effect of Retrieving more documents?  
-
 **A:** improves documents, and we do not observe significant differences in performance between them. We have the flexibility to adjust the number of retrieved documents at test time, which can affect performance and runtime.
 
 **Q:** What is seq2seq model?
-
 **A:** p(y|x) via a top-K approximation. Concretely, the top K documents are retrieved using the retriever, and the generator produces the output sequence probability for each document, which are then marginalized.
 
+**Q:** What is Open-domain Question Answering?
+**A:** an important real-world application and common testbed for knowledge-intensive tasks [20]. We treat questions and answers as input-output text pairs (x,y) data. We now discuss experimental details for each task.
  
 ## Future Steps
 
