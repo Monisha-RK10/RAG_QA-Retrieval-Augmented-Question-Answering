@@ -82,3 +82,11 @@ RAG_QA/
 **A:** knowledge can be easily updated at test time. Parametric-only models like T5 or BART need further training to improves results on all other tasks, especially for Open-Domain QA, where it is crucial.
 
 ---
+
+
+## Author
+
+**Monisha**  
+Connect via [Medium](https://medium.com/@monishatemp20)  [Linkedin](https://www.linkedin.com/in/monisha-rao-28129676/)
+
+---
