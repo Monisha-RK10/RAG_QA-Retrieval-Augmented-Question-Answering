@@ -35,7 +35,7 @@ def test_pipeline():                                                            
 
     # 4. Build QA chain                                                                                   # Runs a real query end-to-end (loader → embeddings → retriever → LLM).
     qa_chain = build_qa_chain(llm, vectordb)
-    result = qa_chain({"query": "What is Abstractive Question Answering"})
+    result = qa_chain({"query": "What is seq2seq model"})
     print("Test query answer:", result["result"])
    # assert "Abstractive" in result["result"].lower(), "Unexpected answer"                                # Commented out because it was too strict
     assert result["result"], "QA chain returned empty answer"
