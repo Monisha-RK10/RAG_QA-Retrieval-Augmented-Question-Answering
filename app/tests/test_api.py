@@ -68,3 +68,23 @@ def test_health():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+# Test FastAPI /upload_query endpoint
+def test_upload_query(tmp_path):
+    # Create a temporary fake PDF
+    pdf_path = tmp_path / "fake.pdf"
+    pdf_path.write_bytes(b"%PDF-1.4 fake PDF content for testing")
+
+    with open(pdf_path, "rb") as f:
+        response = client.post(
+            "/upload_query",
+            files={"file": ("fake.pdf", f, "application/pdf")},
+            data={"question": "What is the purpose of this test?"}
+        )
+
+    # Assertions
+    assert response.status_code == 200, f"Unexpected status: {response.status_code}"
+    json_resp = response.json()
+    print("Upload query response:", json_resp)
+    assert "answer" in json_resp
+    assert json_resp["answer"], "Empty answer from /upload_query"
