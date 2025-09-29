@@ -11,5 +11,5 @@
 ### 3. Production hardening → caching, quantization, batch inference, fallbacks, timeouts, metadata filtering.
 - These are system-level engineering concerns: reliability, performance, scaling, robustness.
 
-### 4. Testing + FastAPI serving → run unit/integration tests on Colab by cloning the GitHub repo.
+### 4. Testing + FastAPI serving → run unit/integration tests by cloning the GitHub repo.
 - This is for CI/CD thinking (currently, treating Colab like a staging environment).
