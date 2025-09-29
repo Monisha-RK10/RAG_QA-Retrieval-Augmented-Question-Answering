@@ -35,14 +35,14 @@ def test_pipeline():                                                            
 
     # 4. Build QA chain                                                                                   # Runs a real query end-to-end (loader → embeddings → retriever → LLM).
     qa_chain = build_qa_chain(llm, vectordb)
-    result = qa_chain({"query": "What is seq2seq model"})
+    result = qa_chain({"query": "What is seq2seq model?"})
     print("Test query answer:", result["result"])
    # assert "Abstractive" in result["result"].lower(), "Unexpected answer"                                # Commented out because it was too strict
     assert result["result"], "QA chain returned empty answer"
 
 # Test FastAPI /query endpoint                                                                            # Test 2: FastAPI endpoint (end-to-end API test), mimics a real client calling the API
 def test_query_endpoint():
-    response = client.post("/query", json={"question": "What is Abstractive Question Answering?"})
+    response = client.post("/query", json={"question": "What is Effect of Retrieving more documents?"})
     #print("API response:", response.json())
     assert response.status_code == 200
     print(response.json())
