@@ -18,7 +18,7 @@ def load_or_create_vectorstore(
     chunks: List[Document] = None,
     model_name: str = "all-MiniLM-L6-v2",                                                            # A small, fast sentence-transformer model, 384-dim embeddings, You can replace with larger models (e.g., `"all-mpnet-base-v2"`).  
     persist_directory: str = "db"                                                                    # Directory where Chroma will save the database files. Default `"db"`. 
-) -> Chroma:
+) -> Chroma:                                                                                         # ChromaDB: Pure Python, stores vectors + metadata + documents together, has persistence (saves to disk), so DB survives kernel restarts. Good for prototyping, for production with millions of docs, move to FAISS, Pinecone, or Weaviate.
     """
     Load an existing Chroma vectorstore if it exists,
     otherwise create it from the provided chunks.
@@ -35,7 +35,7 @@ def load_or_create_vectorstore(
     embeddings = HuggingFaceEmbeddings(model_name=model_name)                                        # Each text chunk will be fed into this model → returns a vector of floats. 
 
     # Case 1: DB already exists -> just load it                                                      # Pre-created an empty db/ folder (good practice in production)
-    if os.path.exists(os.path.join(persist_directory, "index")):                                     # Check if Chroma’s index files are already inside db/, if yes, don’t recompute anything. This saves time, GPU/CPU, and prevents duplicate embeddings being created each run.
+    if os.path.exists(os.path.join(persist_directory, "index")):                                     # index: internal data structure that maps embeddings → positions in vector space so similarity search is fast. Check if Chroma’s index files are already inside db/, if yes, don’t recompute anything. This saves time, GPU/CPU, and prevents duplicate embeddings being created each run.
         vectordb = Chroma(
             persist_directory=persist_directory,
             embedding_function=embeddings
