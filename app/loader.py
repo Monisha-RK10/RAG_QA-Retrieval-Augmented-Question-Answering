@@ -21,7 +21,7 @@ def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int 
     loader = PyPDFLoader(pdf_path)
     documents = loader.load()
     bad = {"references","appendix","limitations","ethics"}
-    filtered_docs = [d for d in documents if not any(k in d.page_content.lower() for k in bad)]
+    filtered_docs = [d for d in documents if not any(k in d.page_content.lower() for k in bad)]                # Take each page d in documents, and keep it only if it does NOT mention references, appendix, limitations, or ethics.
 
     assert chunk_overlap < chunk_size, "chunk_overlap must be less than chunk_size"
 
@@ -35,9 +35,9 @@ def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int 
 
     # ---- Add metadata ----
     for chunk in chunks:
-        page = chunk.metadata.get("page", None)
+        page = chunk.metadata.get("page", None)                                                                # Fetches the page number from metadata.
         if page is not None:
-            if page <= 1:
+            if page <= 1:                                                                                      # Then it assigns a custom section label based on that page number.
                 chunk.metadata["section"] = "Introduction"
             elif page <= 3:
                 chunk.metadata["section"] = "Methods"
