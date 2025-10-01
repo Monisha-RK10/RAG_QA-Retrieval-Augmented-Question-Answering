@@ -12,7 +12,7 @@ def load_llm(model_name: str = "google/flan-t5-large"):
     from langchain.llms import HuggingFacePipeline                                         # LangChain adapter so you can call the model inside a chain.
     import torch
 
-    tokenizer = AutoTokenizer.from_pretrained(model_name)                                  # Downloads (or loads locally) the tokenizer associated with the given model. Embeddings create “semantic memory.” & LLM interprets query + memory, produces natural language answers.
+    tokenizer = AutoTokenizer.from_pretrained(model_name)                                  # Downloads (or loads locally) the tokenizer associated with the given model. Tokenizer is needed to break down user input → numeric IDs the model understands. Embeddings create “semantic memory.” & LLM interprets query + memory, produces natural language answers.
 
     try:
         model = AutoModelForSeq2SeqLM.from_pretrained(                                     # Loads the actual LLM weights
