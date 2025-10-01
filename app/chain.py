@@ -52,7 +52,7 @@ def build_qa_chain(llm: LLM, vectordb: BaseRetriever, k: int = 3, metadata_filte
     retriever = vectordb.as_retriever(
         search_type="similarity",                                                                                 # It computes embeddings for the query and finds the k nearest neighbors in vector space (cosine similarity, dot product, etc.).
         search_kwargs=search_kwargs                                                                               # Similarity search = KNN with a similarity metric, mechanism inside similarity search.
-    )                                                                                                             # Uses similarity search, top-3 docs. Fast, simple, scalable, perfect for MVPs. 
+    )                                                                                                             # Uses similarity search, top-3 docs. Fast, simple, scalable, perfect for MVPs. Add a re-ranker if production-level precision is needed.
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,                                                                                                  # LLM itself (loaded in llm.py)
         retriever=retriever,                                                                                      # Retriever wrapping the vector DB (from embeddings.py)
