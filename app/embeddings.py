@@ -32,7 +32,7 @@ def load_or_create_vectorstore(
     Returns:
         Chroma: Vectorstore instance.
     """
-    embeddings = HuggingFaceEmbeddings(model_name=model_name)                                        # Each text chunk will be fed into this model → returns a vector of floats. 
+    embeddings = HuggingFaceEmbeddings(model_name=model_name)                                        # Each text chunk will be fed into this model → returns a vector of floats. SentenceTransformer library already handles tokenization internally (it automatically tokenizes, pads, feeds into encoder, and returns the vector). Embeddings create “semantic memory.” & LLM interprets query + memory, produces natural language answers.
 
     # Case 1: DB already exists -> just load it                                                      # Pre-created an empty db/ folder (good practice in production)
     if os.path.exists(os.path.join(persist_directory, "index")):                                     # index: internal data structure that maps embeddings → positions in vector space so similarity search is fast. Check if Chroma’s index files are already inside db/, if yes, don’t recompute anything. This saves time, GPU/CPU, and prevents duplicate embeddings being created each run.
