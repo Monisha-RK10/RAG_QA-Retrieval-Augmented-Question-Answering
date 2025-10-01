@@ -50,9 +50,9 @@ def build_qa_chain(llm: LLM, vectordb: BaseRetriever, k: int = 3, metadata_filte
     if metadata_filter:
         search_kwargs["filter"] = metadata_filter                                                                 # Only pass filter when you actually have metadata to filter on. If metadata_filter is empty or None:, search_kwargs = {"k": 3}, no "filter" key at all. If later you do pass a real filter, e.g., metadata_filter = {"section": "methods"} then search_kwargs becomes: {"k": 3, "filter": {"section": "methods"}} and Chroma accepts it. Else, ValueError: Expected where to have exactly one operator, got {}
     retriever = vectordb.as_retriever(
-        search_type="similarity", 
-        search_kwargs=search_kwargs
-    )                                                                                                             # Uses similarity search, top-3 docs.
+        search_type="similarity",                                                                                 # It computes embeddings for the query and finds the k nearest neighbors in vector space (cosine similarity, dot product, etc.).
+        search_kwargs=search_kwargs                                                                               # Similarity search = KNN with a similarity metric, mechanism inside similarity search.
+    )                                                                                                             # Uses similarity search, top-3 docs. Fast, simple, scalable, perfect for MVPs. 
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,                                                                                                  # LLM itself (loaded in llm.py)
         retriever=retriever,                                                                                      # Retriever wrapping the vector DB (from embeddings.py)
