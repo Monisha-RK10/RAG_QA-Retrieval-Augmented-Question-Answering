@@ -11,7 +11,7 @@ To make your app portable, reproducible. For this, add 'Dockerfile'. It build im
 This is required for multiple services (FastAPI, Postgres, maybe Redis).
 
 ### 3. Docker vs Docker Compose?
-- Docker = runs one container (e.g., your API). docker run -p 8000:8000 rag-api → only API is up.
+- Docker = runs one container (e.g., your API). `docker run -p 8000:8000 rag-api` → only API is up.
 - Docker Compose = runs multiple containers as a system.
 
 Example: one for API, one for Postgres, one for Redis.
@@ -24,20 +24,20 @@ Compose = you run a whole stack with one command
 
 ### 4. What does docker compose usually contain?
 
-- services:
+- `services`:
   - Each block is a separate container.
   - api service = runs your FastAPI Dockerfile.
   - postgres service = runs official Postgres image
 
-- ports:
-  - "8000:8000" → expose API on host port 8000.
-  - "5432: 5432"  → expose Postgres DB on host port 5432.
+- `ports`:
+  - `"8000:8000"` → expose API on host port 8000.
+  - `"5432: 5432"`  → expose Postgres DB on host port 5432.
   - They're separate because API and DB are different processes. 
 
-- volumes:
+- `volumes`:
   - Mounts persistent storage.
-  -  .:/app → maps your local project folder into container /app (good for dev → live code sync).
-  -  postgres_data:/var/lib/postgresql/data → stores DB files outside the container, so if the container restarts, data isn't lost.
+  -  `-.:/app` → maps your local project folder into container /app (good for dev → live code sync).
+  -  `-postgres_data:/var/lib/postgresql/data` → stores DB files outside the container, so if the container restarts, data isn't lost.
 
 That's why paths differ: API mounts code, Postgres mounts DB storage. "Run my FastAPI app + Postgres DB together, wire them up, give API env vars to connect to DB"
 
