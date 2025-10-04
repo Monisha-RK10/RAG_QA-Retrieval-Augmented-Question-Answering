@@ -43,24 +43,30 @@ That's why paths differ: API mounts code, Postgres mounts DB storage. "Run my F
 
 ### 5. Why config via config.yaml + Pydantic Settings?
 To avoid hardcoded paths/models/db URLs in code. 
-config.yaml = configs in plain YAML, human-readable static config file (easy to edit, commit to git). 
+
+- `config.yaml` = configs in plain YAML, human-readable static config file (easy to edit, commit to git).
+```
 Example: llm_model: "google/flan-t5-base"
 embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
-settings.py = Python way to read + validate that config, Python loader + validator using Pydantic. It reads config.yaml, parses it into a Settings object with correct types.
+```
+- `settings.py` = Python way to read + validate that config, Python loader + validator using Pydantic. It reads config.yaml, parses it into a Settings object with correct types.
+```
 Example: settings.llm_model # str
-settings.data_dir # str 
-YAML → for devs to edit easily.
-Pydantic → for app to safely consume config.
+settings.data_dir # str
+```
+- YAML → for devs to edit easily.
+- Pydantic → for app to safely consume config.
 
 ### 6. Benefits of Pydantic settings?
-(i) Type-checked (if 'llm_model' is missing, it errors early).
-(ii) Can merge with env vars (e.g., override DB password in production without touching YAML).
-(iii) Avoids "magic strings" everywhere.
+- (i) Type-checked (if 'llm_model' is missing, it errors early).
+- (ii) Can merge with env vars (e.g., override DB password in production without touching YAML).
+- (iii) Avoids "magic strings" everywhere.
 
 ### 7. Why add Postgres for metadata?
 Persist chunks in Chroma only is fine for small demos, but you will need structured storage too.
-Why Postgres:
-(i) Store file metadata (file_id, filename, uploaded_by, upload_time, num_chunks, etc).
-(ii) Good for queries like: "Which PDFs were uploaded last week?" or "Delete all PDFs for user X."
-(iii) Keep vector DB (Chroma, Pinecone, FAISS) separate for embeddings. Postgres is not replacing it, it complements it. 
+
+**Why Postgres:**
+- (i) Store file metadata (file_id, filename, uploaded_by, upload_time, num_chunks, etc).
+- (ii) Good for queries like: "Which PDFs were uploaded last week?" or "Delete all PDFs for user X."
+- (iii) Keep vector DB (Chroma, Pinecone, FAISS) separate for embeddings. Postgres is not replacing it, it complements it. 
 Every time a PDF is uploaded, you would insert a row into Postgres alongside storing its embeddings in Chroma.
