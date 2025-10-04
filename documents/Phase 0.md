@@ -1,4 +1,4 @@
-# Phase 0 — Productionize the Repo
+# Phase 0: Productionize the Repo
 
 - Dockerize FastAPI (Dockerfile). Add `docker-compose.yml` for local dev.
 - Add `config.yaml` / env support, Pydantic settings.
