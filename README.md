@@ -37,6 +37,10 @@ RAG_QA/
 │── data/                # Temp data / scratch
 │── requirements.txt
 │── README.md (this file)
+│── Dockerfile
+│── docker-compose.yml
+│── config.yaml
+│── settings.py
 
 ```
 ## Production Tweaks Implemented
