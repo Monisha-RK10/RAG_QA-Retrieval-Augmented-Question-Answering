@@ -41,7 +41,31 @@ Compose = you run a whole stack with one command
 
 That's why paths differ: API mounts code, Postgres mounts DB storage. "Run my FastAPI app + Postgres DB together, wire them up, give API env vars to connect to DB"
 
-### 5. Why config via config.yaml + Pydantic Settings?
+### 5. Why do we need the below env vars for Postgres?
+```
+environment:
+  POSTGRES_USER: raguser
+  POSTGRES_PASSWORD: ragpass
+  POSTGRES_DB: ragdb
+```
+The official Postgres Docker image looks for these variables when it starts for the first time. They tell the container:
+- `POSTGRES_USER` → create this DB user.
+- `POSTGRES_PASSWORD` → set password for that user.
+- `POSTGRES_DB` → create this database owned by that user.
+
+If you don’t set them → container defaults to user postgres, no password (insecure), and no custom DB. So: this is basically bootstrap config for the database.
+
+### 6. Why `8000` and `5432` ports and `/var/lib/postgresql/data`?
+- Ports
+  - `8000` → FastAPI default when running uvicorn (uvicorn app:app --port 8000). That’s why we map host:container as 8000:8000.
+  - `5432` → Postgres default port. If you connect via psql or SQLAlchemy, it defaults to localhost:5432.
+  - Note: You can change them, but using defaults makes life easier.
+- Volume path `/var/lib/postgresql/data`
+  - This is where the Postgres image stores its database files internally (the binary files of tables, indexes, logs).
+  - The official image’s Dockerfile defines this as `VOLUME /var/lib/postgresql/data`.
+  - So when you mount `postgres_data:/var/lib/postgresql/data`, it ensures persistence across container restarts.
+    
+### 7. Why config via config.yaml + Pydantic Settings?
 To avoid hardcoded paths/models/db URLs in code. 
 
 - `config.yaml` = configs in plain YAML, human-readable static config file (easy to edit, commit to git).
@@ -57,12 +81,12 @@ settings.data_dir # str
 - YAML → for devs to edit easily.
 - Pydantic → for app to safely consume config.
 
-### 6. Benefits of Pydantic settings?
+### 8. Benefits of Pydantic settings?
 - (i) Type-checked (if 'llm_model' is missing, it errors early).
 - (ii) Can merge with env vars (e.g., override DB password in production without touching YAML).
 - (iii) Avoids "magic strings" everywhere.
 
-### 7. Why add Postgres for metadata?
+### 9. Why add Postgres for metadata?
 Persist chunks in Chroma only is fine for small demos, but you will need structured storage too.
 
 **Why Postgres:**
