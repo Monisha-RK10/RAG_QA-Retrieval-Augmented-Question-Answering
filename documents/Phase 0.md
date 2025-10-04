@@ -41,7 +41,7 @@ Compose = you run a whole stack with one command
 
 That's why paths differ: API mounts code, Postgres mounts DB storage. "Run my FastAPI app + Postgres DB together, wire them up, give API env vars to connect to DB"
 
-### 5. Why do we need the below env vars for Postgres?
+### 5. Why do we need the below env vars for Postgres in `docker-compose.yml`?
 ```
 environment:
   POSTGRES_USER: raguser
@@ -55,7 +55,7 @@ The official Postgres Docker image looks for these variables when it starts for 
 
 If you don’t set them → container defaults to user postgres, no password (insecure), and no custom DB. So: this is basically bootstrap config for the database.
 
-### 6. Why `8000` and `5432` ports and `/var/lib/postgresql/data`?
+### 6. Why `8000` and `5432` ports and `/var/lib/postgresql/data` in `docker-compose.yml`?
 - Ports
   - `8000` → FastAPI default when running uvicorn (uvicorn app:app --port 8000). That’s why we map host:container as 8000:8000.
   - `5432` → Postgres default port. If you connect via psql or SQLAlchemy, it defaults to localhost:5432.
