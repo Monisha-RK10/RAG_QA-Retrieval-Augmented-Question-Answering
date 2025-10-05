@@ -29,6 +29,7 @@ RAG_QA/
 │   ├── llm.py           # LLM loading + quantization
 │   ├── chain.py         # RAG pipeline (retriever + LLM chain)
 │   ├── fastapi_app.py   # API endpoints
+│   |── settings.py      # Pydantic BaseSettings class that loads/validates config
 │   └── tests/
 │       └── test_api.py  # Unit + integration tests
 │
@@ -39,8 +40,8 @@ RAG_QA/
 │── README.md (this file)
 │── Dockerfile
 │── docker-compose.yml
-│── config.yaml
-│── settings.py
+│── config.yaml          # Central configuration file for models, directories, and database
+
 
 ```
 ## Production Tweaks Implemented
