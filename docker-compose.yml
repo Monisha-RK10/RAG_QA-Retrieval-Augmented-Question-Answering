@@ -1,27 +1,28 @@
 version: "3.8"
-services:
-  api:
-    build: .
-    ports:
-      - "8000:8000"
-    depends_on:
-      - postgres
-    environment:
-      - CONFIG_PATH=/app/config.yaml
-    volumes:
-      - .:/app
 
-  postgres:
+services:
+  api:  # FastAPI app
+    build: .   # Looks for Dockerfile in root folder, builds the image
+    ports:
+      - "8000:8000"   # Expose FastAPI on localhost:8000
+    depends_on:
+      - postgres       # Waits for postgres container
+    environment:
+      - CONFIG_PATH=/app/config.yaml   # Pass config path to app
+    volumes:
+      - .:/app   # Mount your repo into the container
+
+  postgres:   # Database
     image: postgres:15
     restart: always
-    environment:
+    environment:   # Creates user, password, db automatically
       POSTGRES_USER: raguser
       POSTGRES_PASSWORD: ragpass
       POSTGRES_DB: ragdb
     ports:
-      - "5432:5432"
+      - "5432:5432"   # Expose DB on localhost:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data   # Data persistence (not wiped on restart)
 
 volumes:
   postgres_data:
