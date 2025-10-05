@@ -7,6 +7,8 @@
 
 # Note: The pipeline is tuned for coherent, non-repetitive, moderately long answers
 
+from app.settings import settings
+
 def load_llm(model_name: str = "google/flan-t5-large"):
     from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, pipeline                # Loads the tokenizer (maps text ↔ tokens), loads a Seq2Seq language model (T5 family, BART, etc.), Hugging Face’s inference wrapper (simplifies generation).
     from langchain.llms import HuggingFacePipeline                                         # LangChain adapter so you can call the model inside a chain.
@@ -24,6 +26,7 @@ def load_llm(model_name: str = "google/flan-t5-large"):
     except Exception as e:
         print(f"[Warning] Failed to load {model_name}: {e}. Falling back to flan-t5-base (CPU).")
         model_name = "google/flan-t5-base"
+        model_name = settings.llm_model
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
     model = torch.compile(model)                                                           # Speeds up inference
