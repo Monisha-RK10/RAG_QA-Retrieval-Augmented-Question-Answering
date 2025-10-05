@@ -24,6 +24,7 @@ Blog post (concept + pipeline walkthrough):
 ```
 RAG_QA/
 │── app/
+|   ├── db_models.py     # SQLAlchemy models + engine setup
 │   ├── loader.py        # PDF loading + chunking
 │   ├── embeddings.py    # Embeddings + Chroma vectorstore
 │   ├── llm.py           # LLM loading + quantization
