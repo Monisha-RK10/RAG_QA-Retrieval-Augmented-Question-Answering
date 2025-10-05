@@ -45,8 +45,8 @@ llm = load_llm()                                                                
 # --------------------------
 # Load persisted vectorstore or create from default PDF
 # --------------------------
-#default_pdf = DATA_DIR / "RAG_Paper.pdf"
-default_pdf = DATA_DIR / settings.default_pdf_name
+default_pdf = DATA_DIR / "RAG_Paper.pdf"
+#default_pdf = DATA_DIR / settings.default_pdf_name
 
 if DB_DIR.exists() and any(DB_DIR.iterdir()):                                                         # Checks 3 cases: If a persisted DB exists → reload it (fast startup), Else if a default PDF exists → create a new DB, Else → no DB (wait for upload). This is smart fallback design (Production tweak #4).                                                      
     vectordb = Chroma(
