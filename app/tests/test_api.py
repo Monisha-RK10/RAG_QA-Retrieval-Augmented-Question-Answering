@@ -17,12 +17,15 @@ from app.llm import load_llm
 from app.chain import build_qa_chain
 from langchain_community.vectorstores import Chroma
 
+from app.settings import settings
+
 client = TestClient(app)
 
 # Test the loader + embeddings + chain
 def test_pipeline():                                                                                      # Test 1: Pipeline (direct function calls)
     # 1. Load PDF                                                                                         # Verifies the loader can read the default PDF and split into chunks.
-    chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
+    #chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
+    chunks = load_and_chunk_pdf(f"{settings.data_dir}/{settings.default_pdf_name}")
     assert len(chunks) > 0, "No chunks loaded"
 
     # 2. Create vectorstore                                                                               # Ensures vectorstore creation + persistence works. (db/ should have Chroma files after this.)
