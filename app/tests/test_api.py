@@ -24,8 +24,8 @@ client = TestClient(app)
 # Test the loader + embeddings + chain
 def test_pipeline():                                                                                      # Test 1: Pipeline (direct function calls)
     # 1. Load PDF                                                                                         # Verifies the loader can read the default PDF and split into chunks.
-    chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
-    #chunks = load_and_chunk_pdf(f"{settings.data_dir}/{settings.default_pdf_name}")
+    #chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
+    chunks = load_and_chunk_pdf(f"{settings.data_dir}/{settings.default_pdf_name}")
     assert len(chunks) > 0, "No chunks loaded"
 
     # 2. Create vectorstore                                                                               # Ensures vectorstore creation + persistence works. (db/ should have Chroma files after this.)
