@@ -13,11 +13,12 @@
   default_pdf_name: "RAG_Paper.pdf"
 
 - `settings.py` (inside app/) → Pydantic BaseSettings class that loads/validates config.
-Access anywhere in code with:
-```
-from app.settings import settings
-print(settings.data_dir)
-``` 
+ Access anywhere in code with:
+ ```yaml
+ from app.settings import settings
+ print(settings.data_dir)
+
+
 ## Scripts Overview
 
 - `loader.py` → Loads PDFs, chunks text, filters out irrelevant sections.
