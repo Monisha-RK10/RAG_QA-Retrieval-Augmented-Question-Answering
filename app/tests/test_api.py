@@ -17,7 +17,7 @@ from app.llm import load_llm
 from app.chain import build_qa_chain
 from langchain_community.vectorstores import Chroma
 
-from app.settings import settings
+#from app.settings import settings
 
 client = TestClient(app)
 
