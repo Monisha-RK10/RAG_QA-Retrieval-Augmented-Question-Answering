@@ -13,12 +13,12 @@ from langchain.schema import Document                                           
 from typing import List
 import os
 
-#from app.settings import settings
+from app.settings import settings
 
 def load_or_create_vectorstore(
     chunks: List[Document] = None,
-    model_name: str = "all-MiniLM-L6-v2",                                                            # A small, fast sentence-transformer model, 384-dim embeddings, You can replace with larger models (e.g., `"all-mpnet-base-v2"`).  
-   # model_name: str = settings.embedding_model,
+   # model_name: str = "all-MiniLM-L6-v2",                                                            # A small, fast sentence-transformer model, 384-dim embeddings, You can replace with larger models (e.g., `"all-mpnet-base-v2"`).  
+    model_name: str = settings.embedding_model,
     persist_directory: str = "db"                                                                    # Directory where Chroma will save the database files. Default `"db"`. 
 ) -> Chroma:                                                                                         # ChromaDB: Pure Python, stores vectors + metadata + documents together, has persistence (saves to disk), so DB survives kernel restarts. Good for prototyping, for production with millions of docs, move to FAISS, Pinecone, or Weaviate.
     """
