@@ -96,3 +96,9 @@ def test_upload_query(tmp_path):
     print("Upload query response:", json_resp)
     assert "answer" in json_resp
     assert json_resp["answer"], "Empty answer from /upload_query"
+
+# Lightweight “config test” to know if config parsing breaks in the future
+def test_settings_load():
+    assert settings.llm_model.startswith("google/")
+    assert settings.embedding_model.startswith("sentence-transformers/")
+    assert settings.data_dir == "data"
