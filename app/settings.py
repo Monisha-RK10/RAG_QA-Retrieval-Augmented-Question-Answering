@@ -1,4 +1,5 @@
-from pydantic import BaseSettings
+#from pydantic import BaseSettings
+from pydantic_settings import BaseSettings   # <-- changed import
 import yaml
 
 class Settings(BaseSettings):
