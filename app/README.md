@@ -35,3 +35,4 @@
 - `test_query_timeout` → Ensures queries timeout after 30s (robustness check).
 - `test_health` → API test for /health.
 - `test_upload_query` → Simulate uploading a PDF + question to /upload_query.
+- `test_settings_load` → Verifies config.yaml → settings.py integration.
