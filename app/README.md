@@ -17,7 +17,7 @@
  ```yaml
  from app.settings import settings
  print(settings.data_dir)
-
+```
 
 ## Scripts Overview
 
