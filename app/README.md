@@ -1,5 +1,17 @@
 # app/
 
+## Config & Settings
+
+- `config.yaml` (repo root) → Central configuration file for models, directories, and database.
+  Example:
+  ```yaml
+  llm_model: "google/flan-t5-base"
+  embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
+  data_dir: "data"
+  db_dir: "db"
+  postgres_url: "postgresql://raguser:ragpass@postgres:5432/ragdb"
+  default_pdf_name: "RAG_Paper.pdf"
+
 ## Scripts Overview
 
 - `loader.py` → Loads PDFs, chunks text, filters out irrelevant sections.
