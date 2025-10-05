@@ -25,7 +25,7 @@ def load_llm(model_name: str = "google/flan-t5-large"):
         )
     except Exception as e:
         print(f"[Warning] Failed to load {model_name}: {e}. Falling back to flan-t5-base (CPU).")
-        model_name = "google/flan-t5-base"
+       # model_name = "google/flan-t5-base"
         model_name = settings.llm_model
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
