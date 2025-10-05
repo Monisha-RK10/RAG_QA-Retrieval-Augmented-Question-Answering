@@ -33,7 +33,8 @@ RAG_QA/
 │   |── settings.py      # Pydantic BaseSettings class that loads/validates config
 │   └── tests/
 │       └── test_api.py  # Unit + integration tests
-│
+│       └── test_db.py   # To confirm Postgres connection works inside docker-compose
+|
 │── documents/           # Example PDFs
 │── db/                  # Persisted vectorstore
 │── data/                # Temp data / scratch
