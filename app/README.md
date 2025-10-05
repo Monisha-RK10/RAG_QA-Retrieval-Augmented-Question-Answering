@@ -12,13 +12,11 @@
   postgres_url: "postgresql://raguser:ragpass@postgres:5432/ragdb"
   default_pdf_name: "RAG_Paper.pdf"
 
-- `settings.py` (inside app/) → Pydantic BaseSettings class that loads/validates config.
- Access anywhere in code with:
- ```yaml
+- `settings.py` (inside app/) → Pydantic BaseSettings class that loads/validates config. Access anywhere in code with:
+ ``` bash
  from app.settings import settings
  print(settings.data_dir)
 ```
-
 ## Scripts Overview
 
 - `loader.py` → Loads PDFs, chunks text, filters out irrelevant sections.
