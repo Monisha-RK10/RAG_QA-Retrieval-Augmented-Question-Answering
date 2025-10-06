@@ -89,17 +89,17 @@ settings.data_dir # str
 - ```bash
   export POSTGRES_URL=postgresql://prod_user:secure@db:5432/proddb
   uvicorn app.fastapi_app:app
--```
+-```bash
 Without changing config.yaml, your app picks up the production DB string (**don’t hardcode secrets into code or YAML**).
 
-### 8. Benefits of Pydantic settings?
+### 9. Benefits of Pydantic settings?
 - Type-checked config → if llm_model is missing or not a string, error at startup.
 - Env var override → great for secrets and deployment differences (local, staging, prod).
 - No magic strings → config is in one place, no hidden strings across files.
 - Validation rules → e.g. forbid extra fields, enforce URL type for postgres_url.
 - Centralized defaults → easy to see all knobs your app supports.
 
-### 9. Why Postgres in addition to Chroma/FAISS/Pinecone?
+### 10. Why Postgres in addition to Chroma/FAISS/Pinecone?
 - `Vector DB (Chroma, FAISS, Pinecone)` = for embeddings.
 - `SQL DB (Postgres)` = for metadata & app logic.
 
@@ -110,13 +110,13 @@ Example workflow: User uploads `report.pdf`.
 - Store metadata row in Postgres:
 
   **id** | **filename**   | **upload_time**        | **num_chunks** | **uploaded_by**
----------------------------------------------------------------
- 1 | report.pdf | 2025-10-04 13:22   | 123        | monisha
+---------|----------------|------------------------|----------------|--
+ 1|        report.pdf     | 2025-10-04 13:22       | 123            | monisha
 
 **Benefits**
 - Can query metadata:
   - “Show me all PDFs uploaded last week.”
-  - “Delete all docs uploaded by user=alice.”
+  - “Delete all docs uploaded by user=monisha.”
   - “List PDFs with fewer than 10 chunks (maybe failed uploads).”
  
 - Deletion/cleanup logic:
