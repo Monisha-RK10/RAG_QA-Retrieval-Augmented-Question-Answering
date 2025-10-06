@@ -35,13 +35,13 @@ RAG_QA/
 │       └── test_api.py  # Unit + integration tests
 │       └── test_db.py   # To confirm Postgres connection works inside docker-compose
 |
-│── documents/           # Example PDFs
+│── documents/           # Explains process & implementation rollout for production via different phases
 │── db/                  # Persisted vectorstore
-│── data/                # Temp data / scratch
+│── data/                # Temp data / scratch (pdf files)
 │── requirements.txt
-│── README.md (this file)
-│── Dockerfile
-│── docker-compose.yml
+│── README.md            # This file
+│── Dockerfile           # To make app portable, reproducible
+│── docker-compose.yml   # To run multiple containers as a system (FastAPI, Postgres, maybe Redis).
 │── config.yaml          # Central configuration file for models, directories, and database
 
 
