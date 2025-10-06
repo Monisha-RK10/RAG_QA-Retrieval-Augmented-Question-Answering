@@ -86,10 +86,10 @@ settings.data_dir # str
 - `Env vars`: good for secrets (passwords, API keys) and deployment overrides.
 
 - Pydantic’s BaseSettings lets you merge both: It first looks at environment variables, then falls back to your YAML.
-- ```bash
+```bash
   export POSTGRES_URL=postgresql://prod_user:secure@db:5432/proddb
   uvicorn app.fastapi_app:app
--```bash
+```
 Without changing config.yaml, your app picks up the production DB string (**don’t hardcode secrets into code or YAML**).
 
 ### 9. Benefits of Pydantic settings?
@@ -109,9 +109,9 @@ Example workflow: User uploads `report.pdf`.
 - Store embeddings in Chroma (vector similarity).
 - Store metadata row in Postgres:
 
-  **id** | **filename**   | **upload_time**        | **num_chunks** | **uploaded_by**
----------|----------------|------------------------|----------------|--
- 1|        report.pdf     | 2025-10-04 13:22       | 123            | monisha
+|  **id** | **filename**   | **upload_time**        | **num_chunks** | **uploaded_by**|
+|---------|----------------|------------------------|----------------|----------------|
+ |1       |        report.pdf     | 2025-10-04 13:22       | 123            | monisha|
 
 **Benefits**
 - Can query metadata:
