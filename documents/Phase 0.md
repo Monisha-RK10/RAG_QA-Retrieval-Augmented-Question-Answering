@@ -81,16 +81,51 @@ settings.data_dir # str
 - YAML → for devs to edit easily.
 - Pydantic → for app to safely consume config.
 
+### 8. ENV (Environment Variables) vs Config File
+- `Config file (config.yaml)`: good for defaults, versioning, sharing with dev team.
+- `Env vars`: good for secrets (passwords, API keys) and deployment overrides.
+
+- Pydantic’s BaseSettings lets you merge both: It first looks at environment variables, then falls back to your YAML.
+- ```bash
+  export POSTGRES_URL=postgresql://prod_user:secure@db:5432/proddb
+  uvicorn app.fastapi_app:app
+-```
+Without changing config.yaml, your app picks up the production DB string (**don’t hardcode secrets into code or YAML**).
+
 ### 8. Benefits of Pydantic settings?
-- (i) Type-checked (if 'llm_model' is missing, it errors early).
-- (ii) Can merge with env vars (e.g., override DB password in production without touching YAML).
-- (iii) Avoids "magic strings" everywhere.
+- Type-checked config → if llm_model is missing or not a string, error at startup.
+- Env var override → great for secrets and deployment differences (local, staging, prod).
+- No magic strings → config is in one place, no hidden strings across files.
+- Validation rules → e.g. forbid extra fields, enforce URL type for postgres_url.
+- Centralized defaults → easy to see all knobs your app supports.
 
-### 9. Why add Postgres for metadata?
-Persist chunks in Chroma only is fine for small demos, but you will need structured storage too.
+### 9. Why Postgres in addition to Chroma/FAISS/Pinecone?
+- `Vector DB (Chroma, FAISS, Pinecone)` = for embeddings.
+- `SQL DB (Postgres)` = for metadata & app logic.
 
-**Why Postgres:**
-- (i) Store file metadata (file_id, filename, uploaded_by, upload_time, num_chunks, etc).
-- (ii) Good for queries like: "Which PDFs were uploaded last week?" or "Delete all PDFs for user X."
-- (iii) Keep vector DB (Chroma, Pinecone, FAISS) separate for embeddings. Postgres is not replacing it, it complements it. 
-Every time a PDF is uploaded, you would insert a row into Postgres alongside storing its embeddings in Chroma.
+Example workflow: User uploads `report.pdf`.
+
+**Pipeline:**
+- Store embeddings in Chroma (vector similarity).
+- Store metadata row in Postgres:
+
+  **id** | **filename**   | **upload_time**        | **num_chunks** | **uploaded_by**
+---------------------------------------------------------------
+ 1 | report.pdf | 2025-10-04 13:22   | 123        | monisha
+
+**Benefits**
+- Can query metadata:
+  - “Show me all PDFs uploaded last week.”
+  - “Delete all docs uploaded by user=alice.”
+  - “List PDFs with fewer than 10 chunks (maybe failed uploads).”
+ 
+- Deletion/cleanup logic:
+  - Remove embeddings from Chroma using file_id from Postgres.
+ 
+- Separation of concerns:
+  - Postgres = structured queries, metadata, relations.
+  - Vector DB = nearest-neighbor search for chunks.
+ 
+So **in production RAG**, you always see both:
+- Vector DB for embeddings
+- Relational DB (Postgres) for metadata
