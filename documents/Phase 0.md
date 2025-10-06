@@ -123,6 +123,7 @@ Example workflow: User uploads `report.pdf`.
 - Separation of concerns:
   - Postgres = structured queries, metadata, relations.
   - Vector DB = nearest-neighbor search for chunks.
+
 So **in production RAG**, you always see both:
 - Vector DB for embeddings
 - Relational DB (Postgres) for metadata
