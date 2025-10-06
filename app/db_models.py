@@ -1,5 +1,8 @@
 # app/db_models.py
 # Schema + DB connection setup.
+# Engine = Connection factory (manages DB connections). Without engine: session doesn’t know what DB to talk to.
+# Session = Workspace for making queries and commits. Without session: you can’t insert/query.
+
 from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 from datetime import datetime
