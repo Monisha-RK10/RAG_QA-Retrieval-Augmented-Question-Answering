@@ -27,7 +27,7 @@
   - `/query` → Ask questions against existing vectorstore with timeout.
   - `/upload_query` → Upload a new PDF + immediately query it with timeout.
   - `/health` → Service availability + DB status check.
- - `db_models.py1 → Flow: What happens when a PDF is uploaded?
+ - `db_models.py` → **Flow: What happens when a PDF is uploaded?**
    - User uploads PDF → handled in FastAPI.
    - You explicitly call session.add(Document(filename="myfile.pdf")).
    - That creates a new row in documents table:
