@@ -31,6 +31,7 @@
    - User uploads PDF → handled in FastAPI.
    - You explicitly call session.add(Document(filename="myfile.pdf")).
    - That creates a new row in documents table:
+
 | id | filename   | upload_time         |
 | -- | ---------- | ------------------- |
 | 1  | report.pdf | 2025-10-04 16:30:00 |
