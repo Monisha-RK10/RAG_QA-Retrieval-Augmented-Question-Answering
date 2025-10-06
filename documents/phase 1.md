@@ -5,6 +5,15 @@
 - Update `/upload_query` endpoint to insert into Postgres when a new PDF is uploaded.
 - Write a small test in `test_db.py` that simulates this.
 
+```bash
+**Work Flow**
+- Sign up for a free cloud Postgres
+- Update the `config.yaml`
+- Modify `db_models.py`
+- Run the test (`test_db.py`)
+- Extend `fastapi_app.py` upload flow
+```
+
 ### Step 2: GitHub Actions
 - Add GitHub Actions workflow → make sure tests run automatically.
 - This is super lightweight.
