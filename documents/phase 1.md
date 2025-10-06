@@ -7,8 +7,8 @@
 
 ```bash
 - Sign up for a free cloud Postgres
-- Update the `config.yaml` (where the Postgres connection string lives.)
-- Modify `db_models.py` (the simplest way to check if the Postgres connection is alive, you will get this connection string info from cloud Postgres)
+- Update the `config.yaml` (where the Postgres connection string lives, you will get this info from cloud Postgres)
+- Modify `db_models.py` (the simplest way to check if the Postgres connection is alive)
 - Run the test (`test_db.py`)
 - Extend `fastapi_app.py` upload flow (add code to insert metadata row into Postgres on upload.)
 ```
