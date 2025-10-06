@@ -7,11 +7,24 @@
 
 ```bash
 - Sign up for a free cloud Postgres
-- Update the `config.yaml`
-- Modify `db_models.py`
+- Update the `config.yaml` (where the Postgres connection string lives.)
+- Modify `db_models.py` (the simplest way to check if the Postgres connection is alive, you will get this connection string info from cloud Postgres)
 - Run the test (`test_db.py`)
-- Extend `fastapi_app.py` upload flow
+- Extend `fastapi_app.py` upload flow (add code to insert metadata row into Postgres on upload.)
 ```
+
+**Note:**
+- Docker Compose is useful when you run everything together on your local machine or cloud (FastAPI + Postgres as services).
+- So for now → I use cloud Postgres.
+- Docker Compose will come back when I deploy (later in Phase 1).
+- Also, Postgres does not participate in embeddings or retrieval. That part is still handled by Chroma.
+- Postgres stores metadata
+  - `file_id`, `filename`, `uploaded_by`, `upload_time`, `num_chunks`
+  - Maybe status flags (`processed = True/False`)
+  - Deleting or fetching PDF info.
+- So:
+  - Postgres = “library catalog” (tracks which PDFs exist, when, who uploaded).
+  - Chroma = “knowledge inside the books” (stores embeddings of actual text).
 
 ### Step 2: GitHub Actions
 - Add GitHub Actions workflow → make sure tests run automatically.
