@@ -29,7 +29,7 @@
   - `/health` → Service availability + DB status check.
  - `db_models.py`  → Flow: What happens when a PDF is uploaded? 
 ``` bash
-User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf")) - That creates a new row in documents table:
+User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
 ```
 | id | filename   | upload_time         |
 | -- | ---------- | ------------------- |
