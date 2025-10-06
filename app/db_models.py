@@ -2,6 +2,7 @@
 # Schema + DB connection setup.
 # Engine = Connection factory (manages DB connections). Without engine: session doesn’t know what DB to talk to.
 # Session = Workspace for making queries and commits. Without session: you can’t insert/query.
+# This needs the connection URL from config, because that tells SQLAlchemy where to create the table (local Docker Postgres or cloud Supabase).
 
 from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
