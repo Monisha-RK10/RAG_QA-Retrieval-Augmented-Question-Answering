@@ -6,7 +6,6 @@
 - Write a small test in `test_db.py` that simulates this.
 
 ```bash
-**Work Flow**
 - Sign up for a free cloud Postgres
 - Update the `config.yaml`
 - Modify `db_models.py`
