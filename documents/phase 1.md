@@ -14,7 +14,7 @@
 ```
 
 **Note:**
-- Docker Compose is useful when you run everything together on your local machine or cloud (FastAPI + Postgres as services).
+- Docker Compose is useful when everything is run together on the local machine or cloud (FastAPI + Postgres as services).
 - So for now → I use cloud Postgres.
 - Docker Compose will come back when I deploy (later in Phase 1).
 - Also, Postgres does not participate in embeddings or retrieval. That part is still handled by Chroma.
