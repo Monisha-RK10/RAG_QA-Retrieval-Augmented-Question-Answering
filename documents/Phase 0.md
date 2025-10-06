@@ -118,14 +118,11 @@ Example workflow: User uploads `report.pdf`.
   - “Show me all PDFs uploaded last week.”
   - “Delete all docs uploaded by user=monisha.”
   - “List PDFs with fewer than 10 chunks (maybe failed uploads).”
- 
 - Deletion/cleanup logic:
-  - Remove embeddings from Chroma using file_id from Postgres.
- 
+  - Remove embeddings from Chroma using file_id from Postgres
 - Separation of concerns:
   - Postgres = structured queries, metadata, relations.
   - Vector DB = nearest-neighbor search for chunks.
- 
 So **in production RAG**, you always see both:
 - Vector DB for embeddings
 - Relational DB (Postgres) for metadata
