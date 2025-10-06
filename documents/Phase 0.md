@@ -1,5 +1,5 @@
 # Phase 0: Productionize the Repo
-## Dockerized FastAPI, config validation, Postgres skeleton, tests working.
+## Dockerized FastAPI, config Validation, Postgres Skeleton, Tests Working
 - Dockerize FastAPI (Dockerfile). Add `docker-compose.yml` for local dev.
 - Add `config.yaml` / env support, Pydantic settings.
 - Add simple Postgres (local via Docker) to save metadata.
