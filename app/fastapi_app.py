@@ -108,6 +108,18 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
     with open(pdf_path, "wb") as f:
         f.write(await file.read())
 
+      # INSERT METADATA INTO POSTGRES
+    session = SessionLocal()
+    try:
+        doc = Document(filename=file.filename)   # upload_time auto-set
+        session.add(doc)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(status_code=500, detail=f"DB insert failed: {e}")
+    finally:
+        session.close()
+
     # Load & chunk PDF
     chunks = load_and_chunk_pdf(str(pdf_path))
     if not chunks:
