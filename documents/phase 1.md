@@ -26,7 +26,7 @@
   - Postgres = “library catalog” (tracks which PDFs exist, when, who uploaded).
   - Chroma = “knowledge inside the books” (stores embeddings of actual text).
 
-### Output for Step 1: 
+### Step 1: Output 
 ```
 Insert response: data=[{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_time': '2025-10-07T22:55:50.521976'}] count=None
 All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_time': '2025-10-07T22:55:50.521976'}]
