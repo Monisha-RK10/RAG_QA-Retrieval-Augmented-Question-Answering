@@ -27,9 +27,9 @@
   - Chroma = “knowledge inside the books” (stores embeddings of actual text).
 
 ### Step 1: Input + Output for Postgres Check
-**Input: Supabase SQL editor & inserted + queried a row via Supabase client**
-- Created the `documents` table in Supabase via SQL editor.
-- Successfully inserted + queried rows via the Supabase Python client.
+**Input**
+- Created the `documents` table in **Supabase via SQL editor**.
+- Successfully inserted + queried rows via the **Supabase Python client**.
 
 ```
 create table documents (
