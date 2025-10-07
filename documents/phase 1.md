@@ -26,6 +26,11 @@
   - Postgres = “library catalog” (tracks which PDFs exist, when, who uploaded).
   - Chroma = “knowledge inside the books” (stores embeddings of actual text).
 
+### Output for Step 1: 
+```
+Insert response: data=[{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_time': '2025-10-07T22:55:50.521976'}] count=None
+All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_time': '2025-10-07T22:55:50.521976'}]
+```
 ### Step 2: GitHub Actions
 - Add GitHub Actions workflow → make sure tests run automatically.
 - This is super lightweight.
