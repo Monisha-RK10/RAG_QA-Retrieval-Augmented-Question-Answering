@@ -47,11 +47,12 @@ All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_t
 - `db_models.py` with SQLAlchemy.
 - `fastapi_app.py` using SQLAlchemy sessions.
 - `test_db.py` as an integration test (runnable on cloud).
-
+---
 ### Step 2: GitHub Actions
 - Add GitHub Actions workflow → make sure tests run automatically.
 - This is super lightweight.
-
+---
 ### Step 3: Deployment Target
 - Pick a deployment target (Render, Cloud Run, or a cheap VM).
 - Deploy with docker-compose up so Postgres + FastAPI run together in the cloud.
+---
