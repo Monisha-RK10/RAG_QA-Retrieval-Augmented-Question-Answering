@@ -26,8 +26,8 @@
   - Postgres = “library catalog” (tracks which PDFs exist, when, who uploaded).
   - Chroma = “knowledge inside the books” (stores embeddings of actual text).
 
-### Step 1: Input + Output 
-**Input (In SQL Editor of Supabase)**
+### Step 1: Input + Output for Postgres Check
+**Input: Supabase SQL editor & inserted + queried a row via Supabase client**
 ```
 create table documents (
     id serial primary key,
