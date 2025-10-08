@@ -19,6 +19,14 @@ from langchain_community.vectorstores import Chroma
 
 from app.settings import settings
 
+@pytest.fixture(scope="session", autouse=True)
+def setup_vectorstore():
+    global vectordb, qa_chain
+    if not DB_DIR.exists() or not any(DB_DIR.iterdir()):
+        chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
+        vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
+        qa_chain = build_qa_chain(load_llm(), vectordb)
+        
 client = TestClient(app)
 
 # Test the loader + embeddings + chain
