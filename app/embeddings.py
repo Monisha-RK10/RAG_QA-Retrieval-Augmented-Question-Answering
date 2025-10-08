@@ -7,7 +7,7 @@
 # First run: You upload a PDF → chunks → embeddings → vectorstore created in db/.
 # Later runs: DB already exists → no chunking/embedding → queries are super fast.
 
-from langchain.embeddings import HuggingFaceEmbeddings                                               # Imports LangChain’s wrapper around Hugging Face sentence-transformers
+from langchain_community.embeddings import HuggingFaceEmbeddings                                     # Imports LangChain’s wrapper around Hugging Face sentence-transformers
 from langchain_community.vectorstores import Chroma                                                  # Imports Chroma, an open-source vector database that stores embeddings and lets you run similarity searches (kNN). Chroma here is LangChain’s integration, not raw ChromaDB API.
 from langchain.schema import Document                                                                # List of LangChain `Document` objects (from `loader.py`).
 from typing import List
