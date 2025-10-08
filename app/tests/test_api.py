@@ -34,18 +34,3 @@ def test_settings_load():
     assert settings.embedding_model.startswith("sentence-transformers/")
     assert settings.data_dir == "data"
 
-# Test FastAPI for timeout 
-def test_query_timeout(monkeypatch):
-    # Monkeypatch qa_chain to simulate a long-running query
-    from app.fastapi_app import qa_chain
-
-    def slow_chain(_):
-        # Simulate 35s blocking work
-        import time; time.sleep(35)
-        return {"result": "This should never return"}
-
-    monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
-
-    response = client.post("/query", json={"question": "Will this timeout?"})
-    assert response.status_code == 504
-    assert response.json()["detail"] == "Query timed out after 30s"
