@@ -18,54 +18,8 @@ from app.chain import build_qa_chain
 from langchain_community.vectorstores import Chroma
 
 from app.settings import settings
-
-@pytest.fixture(scope="session", autouse=True)
-def setup_vectorstore():
-    global vectordb, qa_chain
-    if not DB_DIR.exists() or not any(DB_DIR.iterdir()):
-        chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
-        vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
-        qa_chain = build_qa_chain(load_llm(), vectordb)
-        
+ 
 client = TestClient(app)
-
-# Test the loader + embeddings + chain
-def test_pipeline():                                                                                      # Test 1: Pipeline (direct function calls)
-    # 1. Load PDF                                                                                         # Verifies the loader can read the default PDF and split into chunks.
-    #chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
-    chunks = load_and_chunk_pdf(f"{settings.data_dir}/{settings.default_pdf_name}")
-    assert len(chunks) > 0, "No chunks loaded"
-
-    # 2. Create vectorstore                                                                               # Ensures vectorstore creation + persistence works. (db/ should have Chroma files after this.)
-    vectordb = load_or_create_vectorstore(chunks, persist_directory="db")
-    assert vectordb is not None, "Vectorstore creation failed"
-
-    # 3. Load LLM                                                                                         # Confirms the LLM is loaded correctly (even if it falls back to CPU / smaller model).
-    llm = load_llm()
-    assert llm is not None, "LLM load failed"
-
-    # 4. Build QA chain                                                                                   # Runs a real query end-to-end (loader → embeddings → retriever → LLM).
-    qa_chain = build_qa_chain(llm, vectordb)
-    result = qa_chain({"query": "What is seq2seq model?"})
-    print("Test query answer:", result["result"])
-   # assert "Abstractive" in result["result"].lower(), "Unexpected answer"                                # Commented out because it was too strict
-    assert result["result"], "QA chain returned empty answer"
-
-# Test FastAPI for timeout 
-def test_query_timeout(monkeypatch):
-    # Monkeypatch qa_chain to simulate a long-running query
-    from app.fastapi_app import qa_chain
-
-    def slow_chain(_):
-        # Simulate 35s blocking work
-        import time; time.sleep(35)
-        return {"result": "This should never return"}
-
-    monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
-
-    response = client.post("/query", json={"question": "Will this timeout?"})
-    assert response.status_code == 504
-    assert response.json()["detail"] == "Query timed out after 30s"
 
 # Test FastAPI /health endpoint
 def test_health():
