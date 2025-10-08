@@ -43,13 +43,6 @@ def test_pipeline():                                                            
    # assert "Abstractive" in result["result"].lower(), "Unexpected answer"                                # Commented out because it was too strict
     assert result["result"], "QA chain returned empty answer"
 
-# Test FastAPI /query endpoint                                                                            # Test 2: FastAPI endpoint (end-to-end API test), mimics a real client calling the API
-def test_query_endpoint():
-    response = client.post("/query", json={"question": "What is the advantage of Index hot-swapping?"})
-    #print("API response:", response.json())
-    assert response.status_code == 200
-    print(response.json())
-
 # Test FastAPI for timeout 
 def test_query_timeout(monkeypatch):
     # Monkeypatch qa_chain to simulate a long-running query
@@ -102,3 +95,10 @@ def test_settings_load():
     assert settings.llm_model.startswith("google/")
     assert settings.embedding_model.startswith("sentence-transformers/")
     assert settings.data_dir == "data"
+
+# Test FastAPI /query endpoint                                                                            # Test 2: FastAPI endpoint (end-to-end API test), mimics a real client calling the API
+def test_query_endpoint():
+    response = client.post("/query", json={"question": "What is the advantage of Index hot-swapping?"})
+    #print("API response:", response.json())
+    assert response.status_code == 200
+    print(response.json())
