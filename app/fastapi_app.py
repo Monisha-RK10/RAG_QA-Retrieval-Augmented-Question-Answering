@@ -48,6 +48,32 @@ qa_chain = None
 class QueryRequest(BaseModel):
     question: str
 
+# --------------------------
+# Startup event (lazy initialization)
+# --------------------------
+@app.on_event("startup")
+async def startup_event():
+    global embeddings, llm, vectordb, qa_chain
+
+    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+    llm = load_llm()
+
+    default_pdf = DATA_DIR / settings.default_pdf_name
+
+    if DB_DIR.exists() and any(DB_DIR.iterdir()):
+        vectordb = Chroma(persist_directory=str(DB_DIR), embedding_function=embeddings)
+    elif default_pdf.exists():
+        chunks = load_and_chunk_pdf(str(default_pdf))
+        vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
+    else:
+        vectordb = None
+
+    if vectordb:
+        qa_chain = build_qa_chain(llm, vectordb)
+
+# --------------------------
+# Endpoints
+# --------------------------
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
