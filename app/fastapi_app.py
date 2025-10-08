@@ -16,7 +16,7 @@ from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
 from app.settings import settings
-from app.db_models import SessionLocal
+#from app.db_models import SessionLocal
 
 # app/fastapi_app.py
 from fastapi import FastAPI
