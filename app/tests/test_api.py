@@ -46,15 +46,16 @@ def test_query_endpoint():
 # Test FastAPI for timeout 
 @pytest.mark.skipif(os.environ.get("CI") == "true", reason="Skip long timeout test in CI")
 def test_query_timeout(monkeypatch):
-    # Monkeypatch qa_chain to simulate a long-running query
+    import asyncio as aio
     from app.fastapi_app import qa_chain
 
-    def slow_chain(_):
-        # Simulate 35s/1s blocking work
-        import time; time.sleep(1)                                                                        # Simulate "slow" without long delay
-        return {"result": "This should never return"}
+    # Patch asyncio.to_thread to block longer than timeout
+    def slow_to_thread(func, *args, **kwargs):
+        import time
+        time.sleep(1)  # simulate slow
+        return func(*args, **kwargs)
 
-    monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
+    monkeypatch.setattr(aio, "to_thread", slow_to_thread)
 
     response = client.post("/query", json={"question": "Will this timeout?"})
     assert response.status_code == 504
