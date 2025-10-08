@@ -34,3 +34,14 @@ def test_settings_load():
     assert settings.embedding_model.startswith("sentence-transformers/")
     assert settings.data_dir == "data"
 
+import io
+
+def test_upload_query():
+    dummy_pdf = io.BytesIO(b"%PDF-1.4 test pdf")
+    response = client.post(
+        "/upload_query",
+        files={"file": ("dummy.pdf", dummy_pdf, "application/pdf")},
+        data={"question": "hello?"}
+    )
+    assert response.status_code == 200
+    assert "answer" in response.json()
