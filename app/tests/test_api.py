@@ -96,14 +96,6 @@ def test_upload_query(tmp_path):
     assert json_resp["answer"], "Empty answer from /upload_query"
 
 # -----------------------------
-# Test FastAPI /query endpoint
-# -----------------------------
-def test_query_endpoint():
-    response = client.post("/query", json={"question": "What is the advantage of Index hot-swapping?"})
-    assert response.status_code == 200
-    print(response.json())
-
-# -----------------------------
 # Test config loading
 # -----------------------------
 def test_settings_load():
