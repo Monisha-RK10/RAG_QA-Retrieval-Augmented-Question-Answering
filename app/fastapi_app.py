@@ -98,9 +98,15 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
+    # Save uploaded PDF to DATA_DIR
+    DATA_DIR.mkdir(exist_ok=True)
     pdf_path = DATA_DIR / file.filename
     with open(pdf_path, "wb") as f:
         f.write(await file.read())
+
+    # Only attempt chunking if file exists
+    if not pdf_path.exists():
+        raise HTTPException(status_code=500, detail="PDF save failed.")
 
     chunks = load_and_chunk_pdf(str(pdf_path))
     if not chunks:
