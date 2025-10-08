@@ -50,7 +50,7 @@ def test_query_timeout(monkeypatch):
 
     def slow_chain(_):
         # Simulate 35s blocking work
-        import time; time.sleep(0.1)
+        import time; time.sleep(1000)
         return {"result": "This should never return"}
 
     monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
