@@ -77,3 +77,18 @@ async def startup_event():
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
+
+@app.post("/query")
+async def query_document(request: QueryRequest):
+    if not vectordb or not qa_chain:
+        raise HTTPException(status_code=400, detail="No vectorstore found. Upload a PDF first.")
+
+    try:
+        result = await asyncio.wait_for(
+            asyncio.to_thread(qa_chain, {"query": request.question}),
+            timeout=30
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Query timed out after 30s")
+
+    return {"answer": result["result"]}
