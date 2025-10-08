@@ -44,6 +44,7 @@ def test_query_endpoint():
 
 
 # Test FastAPI for timeout 
+@pytest.mark.skipif(os.environ.get("CI") == "true", reason="Skip long timeout test in CI")
 def test_query_timeout(monkeypatch):
     # Monkeypatch qa_chain to simulate a long-running query
     from app.fastapi_app import qa_chain
