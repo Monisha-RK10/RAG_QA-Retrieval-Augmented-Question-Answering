@@ -35,7 +35,7 @@ def test_settings_load():
     assert settings.embedding_model.startswith("sentence-transformers/")
     assert settings.data_dir == "data"
 
-# Test FastAPI /query endpoint                                                                            # Test 2: FastAPI endpoint (end-to-end API test), mimics a real client calling the API
+# Test FastAPI /query endpoint                                                                            # FastAPI endpoint (end-to-end API test), mimics a real client calling the API
 def test_query_endpoint():
     response = client.post("/query", json={"question": "What is the advantage of Index hot-swapping?"})
     #print("API response:", response.json())
@@ -49,8 +49,8 @@ def test_query_timeout(monkeypatch):
     from app.fastapi_app import qa_chain
 
     def slow_chain(_):
-        # Simulate 35s blocking work
-        import time; time.sleep(35)
+        # Simulate 35s/1s blocking work
+        import time; time.sleep(1)                                                                        # Simulate "slow" without long delay
         return {"result": "This should never return"}
 
     monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
