@@ -11,7 +11,7 @@
 # Output: Answer (shaped by template rules) + Source docs (for traceability).
 
 from langchain.chains import RetrievalQA
-from langchain import PromptTemplate
+from langchain_core.prompts import PromptTemplate
 from langchain.schema import BaseRetriever
 from langchain.llms.base import LLM
 
