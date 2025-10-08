@@ -19,14 +19,6 @@ from langchain_community.vectorstores import Chroma
 
 from app.settings import settings
 
-@pytest.fixture(scope="session", autouse=True)
-def setup_vectorstore():
-    global vectordb, qa_chain
-    if not DB_DIR.exists() or not any(DB_DIR.iterdir()):
-        chunks = load_and_chunk_pdf("data/RAG_Paper.pdf")
-        vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
-        qa_chain = build_qa_chain(load_llm(), vectordb)
-     
 client = TestClient(app)
 
 # Test FastAPI /health endpoint
@@ -42,3 +34,18 @@ def test_settings_load():
     assert settings.embedding_model.startswith("sentence-transformers/")
     assert settings.data_dir == "data"
 
+# Test FastAPI for timeout 
+def test_query_timeout(monkeypatch):
+    # Monkeypatch qa_chain to simulate a long-running query
+    from app.fastapi_app import qa_chain
+
+    def slow_chain(_):
+        # Simulate 35s blocking work
+        import time; time.sleep(35)
+        return {"result": "This should never return"}
+
+    monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
+
+    response = client.post("/query", json={"question": "Will this timeout?"})
+    assert response.status_code == 504
+    assert response.json()["detail"] == "Query timed out after 30s"
