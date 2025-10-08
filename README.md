@@ -24,25 +24,26 @@ Blog post (concept + pipeline walkthrough):
 ```
 RAG_QA/
 │── app/
-|   ├── db_models.py     # SQLAlchemy models + engine setup
-│   ├── loader.py        # PDF loading + chunking
-│   ├── embeddings.py    # Embeddings + Chroma vectorstore
-│   ├── llm.py           # LLM loading + quantization
-│   ├── chain.py         # RAG pipeline (retriever + LLM chain)
-│   ├── fastapi_app.py   # API endpoints
-│   |── settings.py      # Pydantic BaseSettings class that loads/validates config
+|   ├── db_models.py            # SQLAlchemy models + engine setup
+│   ├── loader.py               # PDF loading + chunking
+│   ├── embeddings.py           # Embeddings + Chroma vectorstore
+│   ├── llm.py                  # LLM loading + quantization
+│   ├── chain.py                # RAG pipeline (retriever + LLM chain)
+│   ├── fastapi_app.py          # API endpoints
+│   |── settings.py             # Pydantic BaseSettings class that loads/validates config
 │   └── tests/
-│       └── test_api.py  # Unit + integration tests
-│       └── test_db.py   # To confirm Postgres connection works inside docker-compose
+│       └── test_api.py         # Unit tests 
+|       └── test_integration.py # Integration tests 
+│       └── test_db.py          # To confirm Postgres connection works inside docker-compose
 |
-│── documents/           # Explains process & implementation rollout for production via different phases
-│── db/                  # Persisted vectorstore
-│── data/                # Temp data / scratch (pdf files)
+│── documents/                  # Explains process & implementation rollout for production via different phases
+│── db/                         # Persisted vectorstore
+│── data/                       # Temp data / scratch (pdf files)
 │── requirements.txt
-│── README.md            # This file
-│── Dockerfile           # To make app portable, reproducible
-│── docker-compose.yml   # To run multiple containers as a system (FastAPI, Postgres, maybe Redis).
-│── config.yaml          # Central configuration file for models, directories, and database
+│── README.md                   # This file
+│── Dockerfile                  # To make app portable, reproducible
+│── docker-compose.yml          # To run multiple containers as a system (FastAPI, Postgres, maybe Redis).
+│── config.yaml                 # Central configuration file for models, directories, and database
 
 
 ```
