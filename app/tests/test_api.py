@@ -46,15 +46,11 @@ def test_query_endpoint():
 # Test FastAPI for timeout 
 @pytest.mark.skipif(os.environ.get("CI") == "true", reason="Skip timeout test in CI")
 def test_query_timeout(monkeypatch):
-    from app.fastapi_app import qa_chain
+    # Patch asyncio.wait_for to raise TimeoutError immediately
+    def fake_wait_for(coro, timeout=None):
+        raise asyncio.TimeoutError()
 
-    # Patch qa_chain to simulate a timeout
-    class DummyChain:
-        def __call__(self, _):
-            import asyncio
-            raise asyncio.TimeoutError()  # force timeout
-
-    monkeypatch.setattr("app.fastapi_app.qa_chain", DummyChain())
+    monkeypatch.setattr(asyncio, "wait_for", fake_wait_for)
 
     response = client.post("/query", json={"question": "Will this timeout?"})
     assert response.status_code == 504
