@@ -34,7 +34,7 @@ DB_DIR.mkdir(exist_ok=True)
 
 #EMBEDDING_MODEL = "all-MiniLM-L6-v2"                                                                  # Picking a small, fast embedding model.
 EMBEDDING_MODEL = settings.embedding_model
-embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)                                        # embeddings object gets reused everywhere → avoids repeated initialization.
+#embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)                                        # embeddings object gets reused everywhere → avoids repeated initialization.
 
 # --------------------------
 # FastAPI App
