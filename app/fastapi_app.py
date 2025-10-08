@@ -2,29 +2,20 @@
 # Production tweak #7: Model caching at startup, load LLM once at startup (FastAPI app startup).
 # Production tweak #8: Timeouts for query endpoints.
 
-import asyncio
-from fastapi import FastAPI, UploadFile, File, HTTPException                                          # Import framework to serve RAG system as an HTTP API, upload files (PDFs), clean error responses
-from fastapi.responses import JSONResponse                                                            # Consistent JSON replies.
+# tests/test_api.py
+import sys
 from pathlib import Path
-from pydantic import BaseModel                                                                        # Pydantic model for request validation.
+from fastapi.testclient import TestClient
 
-from app.loader import load_and_chunk_pdf                                                             # Modular pieces of code
-from app.embeddings import load_or_create_vectorstore
-from app.llm import load_llm
-from app.chain import build_qa_chain
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
+# Ensure repo root is in sys.path so "app" package is importable
+repo_root = Path(__file__).resolve().parents[1]  # tests/ -> RAG_QA/
+sys.path.insert(0, str(repo_root))
 
-from app.settings import settings
-#from app.db_models import SessionLocal
+from app.fastapi_app import app
 
-# --------------------------
-# Health Check Endpoint
-# --------------------------
-@app.get("/health")
-async def health_check():
-    """
-    Simple health check endpoint for monitoring and orchestration systems.
-    Returns 200 OK if the API is alive and ready.
-    """
-    return {"status": "ok"}
+client = TestClient(app)
+
+def test_health():
+    response = client.get("/health")
+    assert response.status_code == 200
+    assert response.json() == {"status": "ok"}
