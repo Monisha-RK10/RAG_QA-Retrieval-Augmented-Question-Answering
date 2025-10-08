@@ -17,10 +17,3 @@ def test_full_rag_pipeline():
     result = qa_chain({"query": "What is seq2seq model?"})
     print("Integration query answer:", result["result"])
     assert result["result"], "RAG pipeline returned empty answer"
-
-
-    monkeypatch.setattr("app.fastapi_app.qa_chain", slow_chain)
-
-    response = client.post("/query", json={"question": "Will this timeout?"})
-    assert response.status_code == 504
-    assert response.json()["detail"] == "Query timed out after 30s"
