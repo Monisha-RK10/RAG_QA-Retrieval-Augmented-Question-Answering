@@ -92,3 +92,29 @@ async def query_document(request: QueryRequest):
         raise HTTPException(status_code=504, detail="Query timed out after 30s")
 
     return {"answer": result["result"]}
+
+@app.post("/upload_query")
+async def upload_query(file: UploadFile = File(...), question: str = ""):
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    pdf_path = DATA_DIR / file.filename
+    with open(pdf_path, "wb") as f:
+        f.write(await file.read())
+
+    chunks = load_and_chunk_pdf(str(pdf_path))
+    if not chunks:
+        raise HTTPException(status_code=400, detail="PDF has no valid content to embed.")
+
+    vectordb_local = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
+    qa_chain_local = build_qa_chain(llm, vectordb_local)
+
+    try:
+        result = await asyncio.wait_for(
+            asyncio.to_thread(qa_chain_local, {"query": question}),
+            timeout=30
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Query timed out after 30s")
+
+    return JSONResponse({"answer": result["result"]})
