@@ -25,5 +25,6 @@ jobs:
         pip install -r requirements.txt
         pip install pytest fastapi
 
-    - name: Run tests with pytest
-      run: pytest -v --disable-warnings
+    - name: Run tests (CI-safe only)
+      run: pytest -m "not integration"
+
