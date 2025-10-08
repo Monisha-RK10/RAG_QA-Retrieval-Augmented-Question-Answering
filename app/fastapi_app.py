@@ -1,78 +1,126 @@
 # app/fastapi_app.py
-# Production tweak #7: Model caching at startup, load LLM once at startup (FastAPI app startup).
-# Production tweak #8: Timeouts for query endpoints.
+# Production tweaks:
+# 1. Model caching at startup
+# 2. Timeouts for query endpoints
 
 import asyncio
-from fastapi import FastAPI, UploadFile, File, HTTPException                                          # Import framework to serve RAG system as an HTTP API, upload files (PDFs), clean error responses
-from fastapi.responses import JSONResponse                                                            # Consistent JSON replies.
+from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
 from pathlib import Path
-from pydantic import BaseModel                                                                        # Pydantic model for request validation.
+from pydantic import BaseModel
 
-from app.loader import load_and_chunk_pdf                                                             # Modular pieces of code
+from app.loader import load_and_chunk_pdf
 from app.embeddings import load_or_create_vectorstore
-from app.llm import load_llm
 from app.chain import build_qa_chain
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
-
 from app.settings import settings
-#from app.db_models import SessionLocal
-
 
 # --------------------------
 # Config & Directories
 # --------------------------
-#DATA_DIR = Path("data")                                                                               # Ensures data/ for PDFs and db/ for vector DB exist.
-#DB_DIR = Path("db")
-
 DATA_DIR = Path(settings.data_dir)
 DB_DIR = Path(settings.db_dir)
-DATA_DIR.mkdir(exist_ok=True)                                                                         # Avoids crash if directories already exist
+DATA_DIR.mkdir(exist_ok=True)
 DB_DIR.mkdir(exist_ok=True)
-
-#EMBEDDING_MODEL = "all-MiniLM-L6-v2"                                                                  # Picking a small, fast embedding model.
-EMBEDDING_MODEL = settings.embedding_model
-embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)                                        # embeddings object gets reused everywhere → avoids repeated initialization.
 
 # --------------------------
 # FastAPI App
 # --------------------------
-app = FastAPI(title="RAG API")                                                                        # Defines the API server, with docs automatically generated at /docs
+app = FastAPI(title="RAG API")
 
 # --------------------------
-# Load LLM once at startup
+# Global placeholders
 # --------------------------
-llm = load_llm()                                                                                      # Production tweak #5: Model caching at startup, without this, every query would reload the model = huge latency hit.
+llm = None
+vectordb = None
+qa_chain = None
 
 # --------------------------
-# Load persisted vectorstore or create from default PDF
+# Pydantic model
 # --------------------------
-#default_pdf = DATA_DIR / "RAG_Paper.pdf"
-default_pdf = DATA_DIR / settings.default_pdf_name
-
-if DB_DIR.exists() and any(DB_DIR.iterdir()):                                                         # Checks 3 cases: If a persisted DB exists → reload it (fast startup), Else if a default PDF exists → create a new DB, Else → no DB (wait for upload). This is smart fallback design (Production tweak #4).                                                      
-    vectordb = Chroma(
-        persist_directory=str(DB_DIR),
-        embedding_function=embeddings
-    )
-elif default_pdf.exists():
-    chunks = load_and_chunk_pdf(str(default_pdf))
-    vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
-else:
-    vectordb = None
-
-# --------------------------
-# Build QA chain if vectordb exists
-# --------------------------
-qa_chain = build_qa_chain(llm, vectordb) if vectordb else None                                        # Builds the LangChain chain (LLM + retriever), only initializes if a DB is present.
-
-# --------------------------
-# Pydantic Model for Query
-# --------------------------
-class QueryRequest(BaseModel):                                                                        # Enforces input validation → if user sends bad JSON, FastAPI rejects it automatically.
+class QueryRequest(BaseModel):
     question: str
 
+# --------------------------
+# Startup event: load LLM, embeddings, vectorstore, QA chain
+# --------------------------
+@app.on_event("startup")
+async def startup_event():
+    global llm, vectordb, qa_chain
 
+    # Import heavy modules inside startup
+    from app.llm import load_llm
+    from app.embeddings import HuggingFaceEmbeddings
+    from langchain_community.vectorstores import Chroma
+
+    EMBEDDING_MODEL = settings.embedding_model
+    embeddings = HuggingFaceEmbeddings(model_name=EMBEDDING_MODEL)
+    llm = load_llm()
+
+    default_pdf = DATA_DIR / settings.default_pdf_name
+
+    if DB_DIR.exists() and any(DB_DIR.iterdir()):
+        vectordb = Chroma(persist_directory=str(DB_DIR), embedding_function=embeddings)
+    elif default_pdf.exists():
+        chunks = load_and_chunk_pdf(str(default_pdf))
+        vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
+    else:
+        vectordb = None
+
+    qa_chain = build_qa_chain(llm, vectordb) if vectordb else None
+
+# --------------------------
+# /query endpoint
+# --------------------------
+@app.post("/query")
+async def query_document(request: QueryRequest):
+    if not vectordb or not qa_chain:
+        raise HTTPException(status_code=400, detail="No vectorstore found. Upload a PDF first.")
+
+    try:
+        result = await asyncio.wait_for(
+            asyncio.to_thread(qa_chain, {"query": request.question}),
+            timeout=30
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Query timed out after 30s")
+
+    return {"answer": result["result"]}
+
+# --------------------------
+# /upload_query endpoint
+# --------------------------
+@app.post("/upload_query")
+async def upload_query(file: UploadFile = File(...), question: str = ""):
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    pdf_path = DATA_DIR / file.filename
+    with open(pdf_path, "wb") as f:
+        f.write(await file.read())
+
+    # Load & chunk PDF
+    chunks = load_and_chunk_pdf(str(pdf_path))
+    if not chunks:
+        raise HTTPException(status_code=400, detail="PDF has no valid content to embed.")
+
+    # Create vectorstore and QA chain for this PDF
+    from app.embeddings import load_or_create_vectorstore
+    local_vectordb = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
+    local_qa_chain = build_qa_chain(llm, local_vectordb)
+
+    try:
+        result = await asyncio.wait_for(
+            asyncio.to_thread(local_qa_chain, {"query": question}),
+            timeout=30
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Query timed out after 30s")
+
+    return JSONResponse({"answer": result["result"]})
+
+# --------------------------
+# /health endpoint
+# --------------------------
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
