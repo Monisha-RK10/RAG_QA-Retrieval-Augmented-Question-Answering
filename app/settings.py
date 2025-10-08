@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     embedding_model: str
     data_dir: str
     db_dir: str
-   # postgres_url: str
+    postgres_url: str
     default_pdf_name: str   # <-- NEW
 
     class Config:
