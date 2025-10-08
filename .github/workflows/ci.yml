@@ -26,7 +26,7 @@ jobs:
           --health-retries=5
 
     env:
-      POSTGRES_URL: postgresql://raguser:ragpass@localhost:5432/ragdb
+      POSTGRES_URL: postgresql://raguser:ragpass@postgres:5432/ragdb
 
     steps:
     - name: Checkout code
