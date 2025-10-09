@@ -1,25 +1,32 @@
 # app/db_models.py
 # Defines tables (Document), engine (engine = create_engine(...)) and session (SessionLocal). Production code uses settings.postgres_url.
 
-from sqlalchemy import Column, Integer, String, DateTime, create_engine
-from sqlalchemy.orm import declarative_base, sessionmaker
-from datetime import datetime
-from app.settings import settings
 import os
 
-Base = declarative_base()
+if os.getenv("SKIP_DB_INIT", "false").lower() == "true":
+    engine = None
+    SessionLocal = None
+    Base = None
+else:
+    # existing DB setup
+    from sqlalchemy import create_engine
+    from sqlalchemy.ext.declarative import declarative_base
+    from sqlalchemy.orm import sessionmaker
+    from sqlalchemy import Column, Integer, String, DateTime, create_engine
+    from sqlalchemy.orm import declarative_base, sessionmaker
+    from datetime import datetime
+    from app.settings import settings
+    import os
 
-class Document(Base):
-    __tablename__ = "documents"
-    id = Column(Integer, primary_key=True, index=True)
-    filename = Column(String, unique=True)
-    upload_time = Column(DateTime, default=datetime.utcnow)
+    class Document(Base):
+        __tablename__ = "documents"
+        id = Column(Integer, primary_key=True, index=True)
+        filename = Column(String, unique=True)
+        upload_time = Column(DateTime, default=datetime.utcnow)
 
-# Use TEST_DATABASE_URL if set (CI / tests), else default Postgres
-DB_URL = os.environ.get("TEST_DATABASE_URL", settings.postgres_url)
+    DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@postgres:5432/postgres")
+    engine = create_engine(DATABASE_URL)
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    Base = declarative_base()
 
-engine = create_engine(DB_URL, connect_args={"check_same_thread": False} if "sqlite" in DB_URL else {})
-SessionLocal = sessionmaker(bind=engine)
-
-# Only create tables if DB_URL is not empty
-Base.metadata.create_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
