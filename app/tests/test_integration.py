@@ -65,19 +65,29 @@ def test_qa_chain_timeout():
         fa.qa_chain = original_qa_chain                                                      # finally restores the original qa_chain, so other tests are unaffected. It always runs, whether an exception occurs or not
 
 
+from unittest.mock import patch
+from fastapi.testclient import TestClient
+from langchain.schema import Document
+import app.fastapi_app as fa
+
+import time
+import pytest
+
 @pytest.mark.integration
 def test_upload_query_timeout(tmp_path):
     client = TestClient(fa.app)
 
-    # Patch load_and_chunk_pdf to return fake chunks
+    # Patch load_and_chunk_pdf to return fake Document objects
     with patch("app.fastapi_app.load_and_chunk_pdf") as mock_loader:
-        mock_loader.return_value = ["chunk1", "chunk2"]
+        mock_loader.return_value = [
+            Document(page_content="chunk1"),
+            Document(page_content="chunk2")
+        ]
 
         # Patch qa_chain to simulate slow processing
         original_chain = fa.qa_chain
         def slow_chain(query):
-            import time
-            time.sleep(35)
+            time.sleep(35)  # longer than 30s timeout
             return {"result": "too slow"}
         fa.qa_chain = slow_chain
 
