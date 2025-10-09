@@ -1,49 +1,42 @@
-# app/tests/test_api.py
+# test_api.py
+# Unit & lightweight integration tests for FastAPI app
+# ----------------------------------------------------
+# test_health          = API health check (unit)
+# test_settings_load   = Config parsing test (unit)
+# test_query_endpoint  = API + pipeline integration (skipped in CI for now)
 
-# test_pipeline = unit/integration test of the pipeline internals, checks the internal pipeline works (PDF → embeddings → vector DB → LLM → QA chain).
-# test_query_endpoint = API layer test of FastAPI + pipeline integration, checks /query works with the persisted/default RAG_Paper.pdf.
-# test_query_timeout → checks the timeout works correctly (monkeypatch simulates a slow chain).
-# test_health (API) = Monitoring, services like Kubernetes, Docker, AWS ELB, etc. hit /health to check if the app is alive.
-# test_upload_query (API with file upload)
-
-import asyncio
 import pytest
-
-from fastapi.testclient import TestClient                                                                 # FastAPI’s built-in testing utility. It spins up the app in memory so you can send HTTP requests without running a real server.
-from app.fastapi_app import app                                                                           # Imports the FastAPI app instance created
-from app.loader import load_and_chunk_pdf
-from app.embeddings import load_or_create_vectorstore
-from app.llm import load_llm
-from app.chain import build_qa_chain
-from langchain_community.vectorstores import Chroma
-
+from fastapi.testclient import TestClient
+from app.fastapi_app import app
 from app.settings import settings
-
 
 client = TestClient(app)
 
 
-# Test FastAPI /health endpoint
+# ---------- UNIT TESTS ----------
+
 @pytest.mark.unit
 def test_health():
+    """FastAPI /health endpoint should return 200 OK and correct JSON."""
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
-# Lightweight “config test” to know if config parsing breaks in the future
+
 @pytest.mark.unit
 def test_settings_load():
+    """Lightweight config sanity check."""
     assert settings.llm_model.startswith("google/")
     assert settings.embedding_model.startswith("sentence-transformers/")
     assert settings.data_dir == "data"
     assert settings.postgres_url.startswith("postgresql://")
 
-# Test FastAPI /query endpoint                                                                            # FastAPI endpoint (end-to-end API test), mimics a real client calling the API
+
+# ---------- INTEGRATION TESTS ----------
+
 @pytest.mark.integration
 def test_query_endpoint():
+    """Integration test of /query endpoint with default PDF and chain."""
     response = client.post("/query", json={"question": "What is the advantage of Index hot-swapping?"})
-    #print("API response:", response.json())
     assert response.status_code == 200
     print(response.json())
-
-
