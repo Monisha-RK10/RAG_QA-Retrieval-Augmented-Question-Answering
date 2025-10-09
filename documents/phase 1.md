@@ -43,10 +43,7 @@ create table documents (
 Insert response: data=[{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_time': '2025-10-07T22:55:50.521976'}] count=None
 All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_time': '2025-10-07T22:55:50.521976'}]
 ```
-**Note:** This proves the Postgres DB is live and reachable, just not over raw TCP currently. For now, my repo supports
-- `db_models.py` with SQLAlchemy.
-- `fastapi_app.py` using SQLAlchemy sessions.
-- `test_db.py` as an integration test (runnable on cloud).
+**Note:** This proves the Postgres DB is live and reachable, just not over raw TCP currently. 
 ---
 ### Step 2: GitHub Actions
 - Add GitHub Actions workflow → make sure tests run automatically.
