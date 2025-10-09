@@ -52,4 +52,4 @@ User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(f
   - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
   - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.  
 - `test_db.py` **(works both locally (Postgres) and in CI/CD (SQLite))**
-  - **Purpose:** To confirm Postgres connection works inside docker-compose
+  - **Purpose:** To confirm if Postgres connection works
