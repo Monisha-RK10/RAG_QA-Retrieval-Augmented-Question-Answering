@@ -31,15 +31,15 @@
 - `test_api.py` 
   - **Purpose:** Fast checks to catch obvious regressions before merge.
   - **Light tests, run on every push/PR**
-  - `test_health` → verifies API is alive.
-  - `test_settings_load` → ensures environment/config parsing works.
+    - `test_health` → verifies API is alive.
+    - `test_settings_load` → ensures environment/config parsing works.
 - `test_integration.py` 
   - **Purpose:** Full end-to-end correctness and robustness checks.
   - **Heavy tests, manual trigger only, triggered by `workflow_dispatch` in GitHub Actions**
-  - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
-  - `test_qa_chain_timeout` → validates timeout handling in the async wrapper.
-  - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
-  - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.  
+    - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
+    - `test_qa_chain_timeout` → validates timeout handling in the async wrapper.
+    - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
+    - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.  
 - `test_db.py` 
   - **Purpose:** To confirm if Postgres connection works
   - **Works both locally (Postgres) and in CI/CD (SQLite)**
