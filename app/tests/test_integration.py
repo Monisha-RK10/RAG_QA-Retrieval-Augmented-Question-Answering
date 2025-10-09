@@ -6,8 +6,9 @@ from app.llm import load_llm
 from app.chain import build_qa_chain
 from app.settings import settings
 
-from fastapi.testclient import TestClient
-from fastapi_app import app
+from app.fastapi.testclient import TestClient
+from app.fastapi_app import app
+from app.fastapi_app import app
 
 client = TestClient(app)
 
