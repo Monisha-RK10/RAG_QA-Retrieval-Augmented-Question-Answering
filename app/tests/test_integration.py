@@ -1,9 +1,9 @@
 #test_integration.py
 # Integration tests for FastAPI app
 # ----------------------------------------------------
-# test_full_rag_pipeline  = Real end-to-end RAG check (integration) to assert that the answer is not empty. Tests direct objects: chunks → vectorstore → LLM → QA chain. No FastAPI endpoints (/query or /upload_query) ran directly.
-# test_qa_chain_timeout   = Time out test (integartion) to assert that the timeout occurs on qa_chain. No FastAPI endpoints (/query or /upload_query) ran directly.
-
+# test_full_rag_pipeline    = Real end-to-end RAG check (integration) to assert that the answer is not empty. Tests direct objects: chunks → vectorstore → LLM → QA chain. No FastAPI endpoints (/query or /upload_query) ran directly.
+# test_qa_chain_timeout     = Time out test (integartion) to assert that the timeout occurs on qa_chain. No FastAPI endpoints (/query or /upload_query) ran directly.
+# test_upload_query_timeout = Full endpoint coverage (upload + query) with timeout logic tested.
 
 import pytest
 from app.fastapi_app import app
@@ -14,10 +14,13 @@ from app.llm import load_llm
 from app.chain import build_qa_chain
 from app.settings import settings
 
-#from unittest.mock import patch
 import time
 import asyncio
 from app.fastapi_app import qa_chain                                                         # patch if needed
+from app import fastapi_app as fa
+
+from fastapi.testclient import TestClient
+from pathlib import Path
 
 # ---------- INTEGRATION TESTS ----------
 
@@ -57,17 +60,8 @@ def test_qa_chain_timeout():
     finally:
         fa.qa_chain = original_qa_chain                                                      # finally restores the original qa_chain, so other tests are unaffected. It always runs, whether an exception occurs or not
 
-import pytest
-from fastapi.testclient import TestClient
-from pathlib import Path
-from app.fastapi_app import app, qa_chain
-import time
-import asyncio
-
 @pytest.mark.integration_manual
 def test_upload_query_timeout(tmp_path):
-    """Manually run: simulate uploading a PDF and a question that triggers timeout."""
-    
     # Create a minimal mock PDF
     pdf_file = tmp_path / "mock.pdf"
     pdf_file.write_bytes(b"%PDF-1.4 mock content")
@@ -75,12 +69,10 @@ def test_upload_query_timeout(tmp_path):
     # Patch qa_chain to simulate a slow chain
     original_chain = qa_chain
     def slow_chain(query):
-        time.sleep(35)  # longer than timeout
+        time.sleep(35)                                                                        # longer than timeout
         return {"result": "too slow"}
-
-    from app import fastapi_app as fa
     fa.qa_chain = slow_chain
-
+    
     client = TestClient(fa.app)
 
     try:
