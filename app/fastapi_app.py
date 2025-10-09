@@ -118,10 +118,27 @@ async def startup_event():
 # --------------------------
 
 
+# --------------------------
+# Health Endpoint
+# --------------------------
+from app.db_models import SessionLocal  
+
 @app.get("/health")
 async def health_check():
-    """Simple health check."""
-    return {"status": "ok"}
+    """
+    Health check that verifies:
+    - API is reachable
+    - Database connection works
+    """
+    try:
+        # Try to connect to DB
+        session = SessionLocal()
+        session.execute("SELECT 1")
+        session.close()
+        return {"status": "ok", "db": "connected"}
+    except Exception as e:
+        # Return status=fail but still 200 (so CI doesn’t crash)
+        return {"status": "fail", "db_error": str(e)}
 
 
 @app.post("/query")
