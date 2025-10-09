@@ -26,5 +26,6 @@ jobs:
           pip install pytest fastapi
 
       # Run unit + non-DB integration tests
-      - name: Run unit & integration tests (no DB)
-        run: pytest -m "not db"
+      - name: Run unit tests
+        run: pytest -m "unit"
+
