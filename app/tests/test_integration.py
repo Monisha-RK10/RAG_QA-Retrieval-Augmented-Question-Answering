@@ -4,7 +4,7 @@
 # test_full_rag_pipeline    = Internal RAG logic without HTTP (functional integration (core logic)) to assert that the answer is not empty. Tests direct objects: chunks → vectorstore → LLM → QA chain. No FastAPI endpoints (/query or /upload_query) ran directly.
 # test_qa_chain_timeout     = Timeout behavior (internal async) to assert that the timeout occurs on qa_chain. No FastAPI endpoints (/query or /upload_query) ran directly. Checks internal async handling logic i.e., "Can my timeout code actually trigger?"
 # test_upload_query_timeout = Timeout behavior (API level, /upload_query), system integration (real endpoint) with timeout logic tested. Checks the API-level user-facing timeout behavior i.e., "And when timeout triggers, does my API return the correct response?"
-# test_query_endpoint = `/query` Full FastAPI endpoint check (RAG mocked or real) (integration)
+# test_query_endpoint       = `/query` Full FastAPI endpoint check (RAG mocked or real) (integration)
 
 import pytest
 from app.fastapi_app import app
