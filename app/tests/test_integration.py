@@ -88,7 +88,7 @@ def test_upload_query_timeout(tmp_path):
             files={"file": ("mock.pdf", b"%PDF-1.4 mock content")},
             data={"question": "What is AI?"}
         )
-
+        assert response.status_code == 504
   
 @pytest.mark.integration
 def test_query_endpoint():
@@ -98,4 +98,4 @@ def test_query_endpoint():
     )
     assert response.status_code == 200
     print(response.json())           
-    assert response.status_code == 504
+    
