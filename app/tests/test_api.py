@@ -3,7 +3,7 @@
 # ----------------------------------------------------
 # test_health          = API health check (unit)
 # test_settings_load   = Config parsing test (unit)
-# test_query_endpoint  = API + pipeline integration (skipped in CI for now)
+# test_query_endpoint  = API + pipeline integration (unit)
 
 import pytest
 from fastapi.testclient import TestClient
