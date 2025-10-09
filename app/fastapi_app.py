@@ -165,17 +165,48 @@ async def query_document(request: QueryRequest):
         return JSONResponse({"answer": f"mocked exception answer for: {request.question}"})
 
 
+from fastapi import UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
+from uuid import uuid4
+import asyncio
+from app.settings import DATA_DIR, DB_DIR
+from app.loader import load_and_chunk_pdf
+from app.embeddings import load_or_create_vectorstore
+from app.chain import build_qa_chain
+from app import fastapi_app as fa
+
+# Optional DB imports
+try:
+    from app.db_models import SessionLocal, Document
+    DB_AVAILABLE = SessionLocal is not None
+except Exception:
+    DB_AVAILABLE = False
+
+
 @app.post("/upload_query")
 async def upload_query(file: UploadFile = File(...), question: str = ""):
-    """Upload a PDF, embed it, and immediately run a query with timeout."""
-    
+    """Upload a PDF, embed it, optionally save metadata to DB, and run a query with timeout."""
+
     if not file.filename.endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
-    # Save uploaded PDF with a unique name to avoid collisions
-    pdf_path = DATA_DIR / f"{uuid4()}_{file.filename}"
+    # Save uploaded PDF with unique name
+    pdf_name = f"{uuid4()}_{file.filename}"
+    pdf_path = DATA_DIR / pdf_name
     with open(pdf_path, "wb") as f:
         f.write(await file.read())
+
+    # Try saving metadata to Postgres (optional, fail-safe)
+    if DB_AVAILABLE:
+        try:
+            session = SessionLocal()
+            doc = Document(filename=pdf_name)
+            session.add(doc)
+            session.commit()
+        except Exception as e:
+            print(f"[Warning] Could not save PDF metadata to DB: {e}")
+        finally:
+            session.close()
 
     # Load & chunk PDF
     chunks = load_and_chunk_pdf(str(pdf_path))
@@ -184,7 +215,7 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
 
     # Create vectorstore and QA chain
     vectordb_local = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
-    qa_chain_local = build_qa_chain(qa_chain=qa_chain, vectordb=vectordb_local)  # or llm as needed
+    qa_chain_local = build_qa_chain(llm=fa.qa_chain, vectordb=vectordb_local)
 
     # Run query with timeout
     try:
