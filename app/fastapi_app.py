@@ -139,3 +139,47 @@ async def query_document(request: QueryRequest):
         return JSONResponse({"answer": f"mocked exception answer for: {request.question}"})
 
 
+from fastapi import UploadFile, File, HTTPException
+from fastapi.responses import JSONResponse
+import asyncio
+from pathlib import Path
+from uuid import uuid4
+from app.settings import settings
+from app.loader import load_and_chunk_pdf
+from app.embeddings import load_or_create_vectorstore
+from app.chain import build_qa_chain
+
+DATA_DIR = Path(settings.data_dir)
+DB_DIR = Path(settings.db_dir)
+
+@app.post("/upload_query")
+async def upload_query(file: UploadFile = File(...), question: str = ""):
+    """Upload a PDF, embed it, and immediately run a query with timeout."""
+    
+    if not file.filename.endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    # Save uploaded PDF with a unique name to avoid collisions
+    pdf_path = DATA_DIR / f"{uuid4()}_{file.filename}"
+    with open(pdf_path, "wb") as f:
+        f.write(await file.read())
+
+    # Load & chunk PDF
+    chunks = load_and_chunk_pdf(str(pdf_path))
+    if not chunks:
+        raise HTTPException(status_code=400, detail="PDF has no valid content to embed.")
+
+    # Create vectorstore and QA chain
+    vectordb_local = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
+    qa_chain_local = build_qa_chain(qa_chain=qa_chain, vectordb=vectordb_local)  # or llm as needed
+
+    # Run query with timeout
+    try:
+        result = await asyncio.wait_for(
+            asyncio.to_thread(qa_chain_local, {"query": question}),
+            timeout=30
+        )
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Query timed out after 30s")
+
+    return JSONResponse({"answer": result["result"]})
