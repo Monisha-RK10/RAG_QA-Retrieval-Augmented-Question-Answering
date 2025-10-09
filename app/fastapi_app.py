@@ -1,5 +1,4 @@
 # app/fastapi_app.py
-# FastAPI RAG API with safe fallbacks for CI/CD
 
 # Design Choices:
 # Lazy loading heavy ML components to avoid CI/CD failures.
@@ -13,14 +12,11 @@ from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from pathlib import Path
 from pydantic import BaseModel
-
 from app.settings import settings
-
 from uuid import uuid4
 from app.loader import load_and_chunk_pdf
 from app.embeddings import load_or_create_vectorstore
 from app.chain import build_qa_chain
-
 from app.db_models import SessionLocal  
 
 # Keep potentially heavy imports inside startup / handlers to avoid import-time failures in CI.
@@ -52,11 +48,9 @@ qa_chain = None
 class QueryRequest(BaseModel):
     question: str
 
-
 # --------------------------
 # Startup Event (lazy init, guarded)
 # --------------------------
-
 
 @app.on_event("startup")
 async def startup_event():
@@ -121,10 +115,10 @@ async def startup_event():
     except Exception:
         qa_chain = None
 
-
 # --------------------------
 # Endpoints
 # --------------------------
+
 
 @app.get("/health")
 async def health_check():
