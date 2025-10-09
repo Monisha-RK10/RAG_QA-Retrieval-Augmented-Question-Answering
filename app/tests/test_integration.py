@@ -24,6 +24,7 @@ from pathlib import Path
 
 # ---------- INTEGRATION TESTS ----------
 
+
 @pytest.mark.integration
 def test_full_rag_pipeline():
     chunks = load_and_chunk_pdf(f"{settings.data_dir}/{settings.default_pdf_name}")
@@ -36,6 +37,7 @@ def test_full_rag_pipeline():
     result = qa_chain({"query": "What is seq2seq model?"})
     print("Integration query answer:", result["result"])
     assert result["result"], "RAG pipeline returned empty answer"
+
 
 @pytest.mark.integration
 def test_qa_chain_timeout():
@@ -59,6 +61,7 @@ def test_qa_chain_timeout():
             )
     finally:
         fa.qa_chain = original_qa_chain                                                      # finally restores the original qa_chain, so other tests are unaffected. It always runs, whether an exception occurs or not
+
 
 @pytest.mark.integration_manual
 def test_upload_query_timeout(tmp_path):
