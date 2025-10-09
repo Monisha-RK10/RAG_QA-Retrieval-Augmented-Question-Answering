@@ -10,3 +10,4 @@ reportlab
 pydantic-settings
 sentence-transformers
 python-multipart
+psycopg2-binary
