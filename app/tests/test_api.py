@@ -3,7 +3,7 @@
 # ----------------------------------------------------
 # test_health = API health route + DB connection (unit)
 # test_settings_load = Configuration parsing (unit)
-# test_query_endpoint = /query endpoint end-to-end (integration)
+# test_query_endpoint = /query endpoint end-to-end i.e., full FastAPI endpoint check (RAG mocked or real)(integration)
 
 import pytest
 from fastapi.testclient import TestClient
