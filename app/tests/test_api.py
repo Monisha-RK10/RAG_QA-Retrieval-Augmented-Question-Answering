@@ -1,9 +1,9 @@
 # app/tests/test_api.py
 # Unit & lightweight integration tests for FastAPI app
 # ----------------------------------------------------
-# test_health = API health route + DB connection (unit)
-# test_settings_load = Configuration parsing (unit)
-# test_query_endpoint = /query endpoint end-to-end i.e., full FastAPI endpoint check (RAG mocked or real)(integration)
+# test_health = Basic health check of FastAPI + DB connection (unit)
+# test_settings_load = Config sanity check (unit)
+# test_query_endpoint = `/query` Full FastAPI endpoint check (RAG mocked or real) (integration)
 
 import pytest
 from fastapi.testclient import TestClient
