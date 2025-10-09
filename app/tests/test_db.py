@@ -1,6 +1,8 @@
 # app/tests/test_db.py
 # Integration test for DB connectivity + schema.
 # Works in CI (SQLite) or locally (Postgres if available).
+import os
+os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"  # Must be **before** importing db_models
 
 import os
 import pytest
