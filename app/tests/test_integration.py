@@ -1,3 +1,4 @@
+#test_integration.py
 import pytest
 from app.loader import load_and_chunk_pdf
 from app.embeddings import load_or_create_vectorstore
