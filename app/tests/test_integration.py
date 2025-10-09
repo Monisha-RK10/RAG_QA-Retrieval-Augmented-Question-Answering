@@ -63,7 +63,7 @@ def test_qa_chain_timeout():
         fa.qa_chain = original_qa_chain                                                      # finally restores the original qa_chain, so other tests are unaffected. It always runs, whether an exception occurs or not
 
 
-@pytest.mark.integration_manual
+@pytest.mark.integration
 def test_upload_query_timeout(tmp_path):
     # Create a minimal mock PDF
     pdf_file = tmp_path / "mock.pdf"
