@@ -1,5 +1,5 @@
 # app/db_models.py
-# Defines tables (Document), engine (create_engine(...)) and session (SessionLocal).
+# Defines tables ORM model (Document), SQLAlchemy engine (connection to DB, create_engine(...)) and SessionLocal (session factory for DB queries).
 
 from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
