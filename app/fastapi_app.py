@@ -9,6 +9,11 @@ from pydantic import BaseModel
 
 from app.settings import settings
 
+from uuid import uuid4
+from app.loader import load_and_chunk_pdf
+from app.embeddings import load_or_create_vectorstore
+from app.chain import build_qa_chain
+
 # Keep potentially heavy imports inside startup / handlers to avoid import-time failures in CI.
 
 # --------------------------
@@ -38,9 +43,12 @@ qa_chain = None
 class QueryRequest(BaseModel):
     question: str
 
+
 # --------------------------
 # Startup Event (lazy init, guarded)
 # --------------------------
+
+
 @app.on_event("startup")
 async def startup_event():
     """
@@ -109,6 +117,7 @@ async def startup_event():
 # Endpoints
 # --------------------------
 
+
 @app.get("/health")
 async def health_check():
     """Simple health check."""
@@ -138,19 +147,6 @@ async def query_document(request: QueryRequest):
     except Exception:
         return JSONResponse({"answer": f"mocked exception answer for: {request.question}"})
 
-
-from fastapi import UploadFile, File, HTTPException
-from fastapi.responses import JSONResponse
-import asyncio
-from pathlib import Path
-from uuid import uuid4
-from app.settings import settings
-from app.loader import load_and_chunk_pdf
-from app.embeddings import load_or_create_vectorstore
-from app.chain import build_qa_chain
-
-DATA_DIR = Path(settings.data_dir)
-DB_DIR = Path(settings.db_dir)
 
 @app.post("/upload_query")
 async def upload_query(file: UploadFile = File(...), question: str = ""):
