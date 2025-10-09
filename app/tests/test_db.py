@@ -3,7 +3,11 @@
 # Works in CI (SQLite) or locally (Postgres if available).
 
 import os
-os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"  # must be set BEFORE importing db_models
+os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"                  # must be set BEFORE importing db_models, “inject” a fake DB URL
+
+# Note: 
+# Normal app run: No TEST_DATABASE_URL set → uses Postgres from settings i.e., DB engine points to the Postgres container (hostname postgres). This works only inside Docker where that hostname is valid
+# Running tests: Set TEST_DATABASE_URL first → db_models reads that instead → uses SQLite i.e., , overrides the default Postgres connection only during testing.
 
 import pytest
 from sqlalchemy import create_engine
