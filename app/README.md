@@ -27,7 +27,7 @@
   - `/health` → Lightweight (service model + db )check
   - `/query` → Query existing RAG pipeline (cached vectorstore + LLM) with timeout
   - `/upload_query` → Upload PDF + embed + query immediately with timeout
- - `db_models.py`  → Flow: What happens when a PDF is uploaded? Supports SQLite (CI test) and Postgres (Docker)
+ - `db_models.py`  → **Flow:** What happens when a PDF is uploaded? **Supports:** SQLite (CI test) and Postgres (Docker)
 
 ``` bash
 User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
@@ -50,7 +50,6 @@ User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(f
   - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
   - `test_qa_chain_timeout` → validates timeout handling in the async wrapper.
   - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
-  - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.
-  
+  - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.  
 - `test_db.py` **(works both locally (Postgres) and in CI/CD (SQLite))**
   - **Purpose:** To confirm Postgres connection works inside docker-compose
