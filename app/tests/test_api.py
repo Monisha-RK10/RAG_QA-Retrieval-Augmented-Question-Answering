@@ -1,7 +1,7 @@
 # app/tests/test_api.py
 # Unit & lightweight integration tests for FastAPI app
 # ----------------------------------------------------
-# test_health = Basic health check of FastAPI + DB connection (unit)
+# test_health        = Basic health check of FastAPI + DB connection (unit)
 # test_settings_load = Config sanity check (unit)
 
 import pytest
