@@ -16,7 +16,7 @@ Blog post (concept + pipeline walkthrough):
 - Retriever → Retrieve top-k relevant chunks per query.
 - LLM → Answer using retrieved context (Flan-T5, quantized for efficiency).
 - FastAPI Server → Expose /query, /upload_query, /health endpoints.
-- CI & Tests → Unit tests (auto): Run on every push + Integration tests (manual): Trigger from GitHub Actions → “Run workflow”.
+- CI & Tests → Unit tests (auto, runs on every push) + Integration tests (manual, trigger from GitHub Actions → “Run workflow”).
 
 ---
 
