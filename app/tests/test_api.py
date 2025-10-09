@@ -24,18 +24,22 @@ client = TestClient(app)
 
 
 # Test FastAPI /health endpoint
+@pytest.mark.unit
 def test_health():
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
 # Lightweight “config test” to know if config parsing breaks in the future
+@pytest.mark.unit
 def test_settings_load():
     assert settings.llm_model.startswith("google/")
     assert settings.embedding_model.startswith("sentence-transformers/")
     assert settings.data_dir == "data"
+    assert settings.postgres_url.startswith("postgresql://")
 
 # Test FastAPI /query endpoint                                                                            # FastAPI endpoint (end-to-end API test), mimics a real client calling the API
+@pytest.mark.integration
 def test_query_endpoint():
     response = client.post("/query", json={"question": "What is the advantage of Index hot-swapping?"})
     #print("API response:", response.json())
