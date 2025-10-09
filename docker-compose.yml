@@ -1,5 +1,7 @@
 version: "3.8"
 
+# Spins up services: FastAPI app + Postgres. Inside Docker, postgres hostname works because Docker creates a network.
+
 services:
   api:  # FastAPI app
     build: .   # Looks for Dockerfile in root folder, builds the image
