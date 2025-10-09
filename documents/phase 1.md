@@ -56,7 +56,7 @@ All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_t
 | **Unit & Lint (CI)**     | every push/PR                 |  automatic | `/health`, settings sanity, `/query`.|
 | **Integration (Manual)** | “Run workflow” in Actions tab |  optional  | full RAG pipeline, timeout, `/upload_query.` |
 
-
+---
 ### Step 3: Deployment Target
 - Pick a deployment target (Render, Cloud Run, or a cheap VM).
 - Deploy with docker-compose up so Postgres + FastAPI run together in the cloud.
