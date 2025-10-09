@@ -39,11 +39,13 @@ User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(f
 
 ## Tests (Located in app/tests/)
 
-- `test_api.py`
-  - `test_pipeline` → Unit/integration test for loader → embeddings → LLM → QA chain.
-  - `test_query_endpoint` → API test for /query.
-  - `test_query_timeout` → Ensures queries timeout after 30s (robustness check).
-  - `test_health` → API test for /health.
-  - `test_upload_query` → Simulate uploading a PDF + question to /upload_query.
-  - `test_settings_load` → Verifies config.yaml → settings.py integration.
+- `test_api.py` (runs every push/PR)
+  - `test_health` → API health check.
+  - `test_settings_load` → Config parsing test.
+  - `test_query_endpoint` → API + pipeline integration.
+- `test_integration.py` (run heavy tests manually)
+  - `test_full_rag_pipeline` → Real end-to-end RAG check (integration).
+  - `test_qa_chain_timeout` → Time out test. 
+  - `test_upload_query_timeout` → Full endpoint coverage (upload + query) with timeout logic (simulate uploading a PDF + question to /upload_query).
+  
 - `test_db.py` → To confirm Postgres connection works inside docker-compose
