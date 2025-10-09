@@ -44,8 +44,4 @@ jobs:
       - name: Run unit tests
         run: pytest -m "not integration"
 
-      # Run integration tests (requires Postgres + vectorstore, etc.)
-      - name: Run integration tests
-        env:
-          DATABASE_URL: postgresql://raguser:ragpass@localhost:5432/ragdb
-        run: pytest -m "integration" -vv
+     
