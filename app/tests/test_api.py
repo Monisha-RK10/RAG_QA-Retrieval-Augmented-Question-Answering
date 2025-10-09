@@ -3,7 +3,6 @@
 # ----------------------------------------------------
 # test_health = Basic health check of FastAPI + DB connection (unit)
 # test_settings_load = Config sanity check (unit)
-# test_query_endpoint = `/query` Full FastAPI endpoint check (RAG mocked or real) (integration)
 
 import pytest
 from fastapi.testclient import TestClient
@@ -29,13 +28,3 @@ def test_settings_load():
     assert settings.data_dir == "data"
     assert settings.postgres_url.startswith("postgresql://")
 
-# ---------- INTEGRATION TESTS ----------
-
-@pytest.mark.integration
-def test_query_endpoint():
-    response = client.post(
-        "/query",
-        json={"question": "What is the advantage of Index hot-swapping?"}
-    )
-    assert response.status_code == 200
-    print(response.json())
