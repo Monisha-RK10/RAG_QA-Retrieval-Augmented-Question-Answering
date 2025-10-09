@@ -1,14 +1,18 @@
-# app/tests/test_api.py
-import pytest
-from fastapi.testclient import TestClient
-from app.fastapi_app import app
-from app.settings import settings
+# test_api.py 
+# Unit & lightweight integration tests for FastAPI app 
+# ---------------------------------------------------- 
+# test_health = API health check (unit) 
+# test_settings_load = Config parsing test (unit) #
+test_query_endpoint = API + pipeline integration (unit)
+
+import pytest from fastapi.testclient 
+import TestClient from app.fastapi_app 
+import app from app.settings 
+import settings
 
 client = TestClient(app)
 
-# -------------------------
-# UNIT TESTS
-# -------------------------
+# ---------- UNIT TESTS ----------
 
 @pytest.mark.unit
 def test_health_db():
@@ -24,30 +28,18 @@ def test_health_db():
     assert "db" in data or "db_error" in data  # ensure DB key exists
 
 
-@pytest.mark.unit
-def test_settings_load():
-    """
-    Ensures environment/config parsing works.
-    """
-    assert hasattr(settings, "postgres_url")
-    assert isinstance(settings.postgres_url, str)
-    assert hasattr(settings, "data_dir")
-    assert isinstance(settings.data_dir, str)
-    assert hasattr(settings, "db_dir")
-    assert isinstance(settings.db_dir, str)
+@pytest.mark.unit 
+def test_settings_load(): 
+    """Lightweight config sanity check.""" 
+    assert settings.llm_model.startswith("google/") 
+    assert settings.embedding_model.startswith("sentence-transformers/") 
+    assert settings.data_dir == "data" 
+    assert settings.postgres_url.startswith("postgresql://")
 
+# ---------- INTEGRATION TESTS ----------
 
-@pytest.mark.unit
-def test_query_endpoint():
-    """
-    Minimal integration check that the /query endpoint runs and returns a response.
-    """
-    response = client.post(
-        "/query",
-        data={"question": "What is AI?"}
-    )
-    assert response.status_code in [200, 400]  # depending on empty DB/vectorstore
-    # Optional: check that response JSON has 'answer' key if 200
-    if response.status_code == 200:
-        data = response.json()
-        assert "answer" in data
+@pytest.mark.integration 
+def test_query_endpoint(): 
+    """Integration test of /query endpoint with default PDF and chain.""" 
+    response = client.post("/query", json={"question": "What is the advantage of Index hot-swapping?"}) 
+    assert response.status_code == 200 print(response.json())
