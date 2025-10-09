@@ -1,4 +1,6 @@
 # app/tests/test_db.py
+# Integration tests for DB connection 
+# ----------------------------------------------------
 # This test ensures:
   # The SQLAlchemy schema (Document table) is valid
   # The DB connection and session flow work (insert → commit → read)
