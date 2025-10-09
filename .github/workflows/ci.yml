@@ -25,7 +25,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest fastapi
 
-      # Run unit + non-DB integration tests
+      # Run only unit tests in CI (skip heavy integrations)
       - name: Run unit tests
         run: pytest -m "unit"
-
