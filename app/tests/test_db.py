@@ -1,5 +1,5 @@
 # app/tests/test_db.py
-# Integration test for DB connectivity + schema.
+# Integration test for DB connectivity and schema, switching to SQLite for CI, (to avoid the “host not found” error).
 # Works in CI (SQLite) or locally (Postgres if available).
 
 import os
