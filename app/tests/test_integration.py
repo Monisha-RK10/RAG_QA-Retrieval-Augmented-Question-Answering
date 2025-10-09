@@ -22,6 +22,8 @@ from pathlib import Path
 from unittest.mock import patch
 from langchain.schema import Document
 
+client = TestClient(app)     
+
 # ---------- INTEGRATION TESTS ----------
 
 @pytest.mark.integration
