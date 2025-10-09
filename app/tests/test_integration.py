@@ -1,4 +1,4 @@
-#  app/tests/test_integration.py
+# app/tests/test_integration.py
 # Integration tests for FastAPI app
 # ----------------------------------------------------
 # test_full_rag_pipeline    = Internal RAG logic without HTTP (functional integration (core logic)) to assert that the answer is not empty. Tests direct objects: chunks → vectorstore → LLM → QA chain. No FastAPI endpoints (/query or /upload_query) ran directly.
