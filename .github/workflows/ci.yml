@@ -5,11 +5,14 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  workflow_dispatch:  # allows manual triggering for integration tests
 
 jobs:
-  build-and-test:
+  # -------------------------
+  # UNIT TESTS (fast, automatic)
+  # -------------------------
+  unit-tests:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -25,6 +28,30 @@ jobs:
           pip install -r requirements.txt
           pip install pytest fastapi
 
-      # Run only unit tests in CI (skip heavy integrations)
       - name: Run unit tests
         run: pytest -m "unit"
+
+  # -------------------------
+  # INTEGRATION TESTS (manual trigger)
+  # -------------------------
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: unit-tests   # optional: only run after unit tests pass
+    if: github.event_name == 'workflow_dispatch'  # manual trigger only
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest fastapi
+
+      - name: Run integration tests
+        run: pytest -m "integration"
