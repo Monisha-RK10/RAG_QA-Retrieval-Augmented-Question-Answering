@@ -3,20 +3,8 @@
 ## Config & Settings
 
 - `config.yaml` (repo root) → Central configuration file for models, directories, and database.
-  Example:
-  ```yaml
-  llm_model: "google/flan-t5-base"
-  embedding_model: "sentence-transformers/all-MiniLM-L6-v2"
-  data_dir: "data"
-  db_dir: "db"
-  postgres_url: "postgresql://raguser:ragpass@postgres:5432/ragdb"
-  default_pdf_name: "RAG_Paper.pdf"
-
 - `settings.py` (inside app/) → Pydantic BaseSettings class that loads/validates config. Access anywhere in code with:
-  ``` bash
-  from app.settings import settings
-  print(settings.data_dir)
-  ```
+
 ## Scripts Overview
 
 - `loader.py` → Loads PDFs, chunks text, filters out irrelevant sections.
@@ -27,11 +15,10 @@
   - `/health` → Lightweight (service model + db )check
   - `/query` → Query existing RAG pipeline (cached vectorstore + LLM) with timeout
   - `/upload_query` → Upload PDF + embed + query immediately with timeout
- - `db_models.py`  → **Flow:** What happens when a PDF is uploaded? **Supports:** SQLite (CI test) and Postgres (Docker)
-
-``` bash
-User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
-```
+ - `db_models.py`  →
+   - **Flow:** What happens when a PDF is uploaded?
+   - **Supports:** SQLite (CI test) and Postgres (Docker)
+   - User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
 
 | id | filename   | upload_time         |
 | -- | ---------- | ------------------- |
@@ -41,15 +28,18 @@ User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(f
 
 ## Tests (Located in app/tests/)
 
-- `test_api.py` **(light tests, run on every push/PR)**
+- `test_api.py` 
   - **Purpose:** Fast checks to catch obvious regressions before merge.
+  - **Light tests, run on every push/PR**
   - `test_health` → verifies API is alive.
   - `test_settings_load` → ensures environment/config parsing works.
-- `test_integration.py` **(heavy tests, manual trigger only, triggered by `workflow_dispatch` in GitHub Actions)**
+- `test_integration.py` 
   - **Purpose:** Full end-to-end correctness and robustness checks.
+  - **Heavy tests, manual trigger only, triggered by `workflow_dispatch` in GitHub Actions**
   - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
   - `test_qa_chain_timeout` → validates timeout handling in the async wrapper.
   - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
   - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.  
-- `test_db.py` **(works both locally (Postgres) and in CI/CD (SQLite))**
+- `test_db.py` 
   - **Purpose:** To confirm if Postgres connection works
+  - **Works both locally (Postgres) and in CI/CD (SQLite)**
