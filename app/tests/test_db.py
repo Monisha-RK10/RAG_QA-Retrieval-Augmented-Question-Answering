@@ -7,7 +7,7 @@ os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"                  # must b
 
 # Note: 
 # Normal app run: No TEST_DATABASE_URL set → uses Postgres from settings i.e., DB engine points to the Postgres container (hostname postgres). This works only inside Docker where that hostname is valid
-# Running tests: Set TEST_DATABASE_URL first → db_models reads that instead → uses SQLite i.e., , overrides the default Postgres connection only during testing.
+# Running tests: Set TEST_DATABASE_URL first → db_models reads that instead → uses SQLite i.e., overrides the default Postgres connection only during testing. Postgres only works when run via Docker Compose.
 
 import pytest
 from sqlalchemy import create_engine
