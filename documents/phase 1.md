@@ -51,6 +51,12 @@ All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_t
 ### Step 2: GitHub Actions
 - Add GitHub Actions workflow → make sure tests run automatically.
 - This is super lightweight.
+
+- | Stage                    | Trigger                       | Runs        | Description                                              |
+| ------------------------ | ----------------------------- | ----------- | -------------------------------------------------------- |
+| **Unit & Lint (CI)**     | every push/PR                 |  automatic | `/health`, `/query`, settings sanity.                    |
+| **Integration (Manual)** | “Run workflow” in Actions tab |  optional  | `/upload_query`, timeout, full RAG pipeline, slow tests. |
+
 ---
 ### Step 3: Deployment Target
 - Pick a deployment target (Render, Cloud Run, or a cheap VM).
