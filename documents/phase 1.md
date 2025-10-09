@@ -54,7 +54,7 @@ All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_t
 | Stage                    | Trigger                       | Runs        | Description |
 | ------------------------ | ----------------------------- | ----------- | ------------|
 | **Unit & Lint (CI)**     | every push/PR                 |  automatic | `/health`(model+db), settings sanity|
-| **Integration (Manual)** | “Run workflow” in Actions tab |  optional  | `/query`(RAG mocked or real), internal RAG logic, internal asyn timeout, `/upload_query` timeout, db connection |
+| **Integration (Manual)** | “Run workflow” in Actions tab |  manual| `/query`(RAG mocked or real), internal RAG logic, internal asyn timeout, `/upload_query` timeout, db connection |
 
 ---
 ### Step 3: Deployment Target
