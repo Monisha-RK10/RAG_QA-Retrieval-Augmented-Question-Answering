@@ -8,3 +8,4 @@ torch>=2.1.0
 pypdf>=3.14.0
 reportlab
 pydantic-settings
+sentence-transformers
