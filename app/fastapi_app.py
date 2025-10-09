@@ -1,6 +1,13 @@
 # app/fastapi_app.py
 # FastAPI RAG API with safe fallbacks for CI/CD
 
+# Design Choices:
+# Lazy loading heavy ML components to avoid CI/CD failures.
+# Safe fallbacks: if embeddings/LLM/DB are not ready, API still responds with mocked answers.
+# Async + background threads: ensures queries don’t block the server.
+# Robust PDF handling: supports upload, chunking, embedding, and querying in one call.
+# Timeouts & error handling: prevents long-running queries from freezing the API.
+
 import asyncio
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
@@ -13,6 +20,8 @@ from uuid import uuid4
 from app.loader import load_and_chunk_pdf
 from app.embeddings import load_or_create_vectorstore
 from app.chain import build_qa_chain
+
+from app.db_models import SessionLocal  
 
 # Keep potentially heavy imports inside startup / handlers to avoid import-time failures in CI.
 
@@ -116,12 +125,6 @@ async def startup_event():
 # --------------------------
 # Endpoints
 # --------------------------
-
-
-# --------------------------
-# Health Endpoint
-# --------------------------
-from app.db_models import SessionLocal  
 
 @app.get("/health")
 async def health_check():
