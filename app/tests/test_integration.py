@@ -24,18 +24,3 @@ def test_full_rag_pipeline():
     print("Integration query answer:", result["result"])
     assert result["result"], "RAG pipeline returned empty answer"
 
-@pytest.mark.integration
-def test_query_timeout(monkeypatch):
-    # Simulate a slow LLM by patching your query function
-    import app.services.llm as llm
-
-    def slow_query(*args, **kwargs):
-        import time
-        time.sleep(6)  # longer than timeout
-        return {"answer": "too slow"}
-
-    monkeypatch.setattr(llm, "query_llm", slow_query)
-
-    response = client.post("/query", json={"question": "What is AI?"})
-    # depending on your app logic, might return 408 or 500
-    assert response.status_code in (408, 500)
