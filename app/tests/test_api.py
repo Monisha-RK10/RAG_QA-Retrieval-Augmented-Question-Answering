@@ -1,21 +1,21 @@
 # app/tests/test_api.py
 # Unit & lightweight integration tests for FastAPI app
 # ----------------------------------------------------
-# test_health = API health check (unit)
-# test_settings_load = Config parsing test (unit)
-# test_query_endpoint = API + pipeline integration (unit)
+# test_health = API health route + DB connection (unit)
+# test_settings_load = Configuration parsing (unit)
+# test_query_endpoint = /query endpoint end-to-end (integration)
 
 import pytest
 from fastapi.testclient import TestClient
 from app.fastapi_app import app
 from app.settings import settings
 
-client = TestClient(app)
+client = TestClient(app)                                                                    # Effectively makes the tests behave like real HTTP requests but run entirely in Python memory.
 
 # ---------- UNIT TESTS ----------
 
 @pytest.mark.unit
-def test_health_db():
+def test_health_db():                                                                       # Pytest detects all functions prefixed with test_
     response = client.get("/health")
     data = response.json()
     assert response.status_code == 200
