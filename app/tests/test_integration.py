@@ -79,22 +79,28 @@ from unittest.mock import patch
 def test_upload_query_timeout(tmp_path):
     client = TestClient(fa.app)
 
-    # Patch load_and_chunk_pdf to return fake Document objects
+    # Patch PDF loader and QA chain
     with patch("app.fastapi_app.load_and_chunk_pdf") as mock_loader, \
-         patch("app.fastapi_app.build_qa_chain") as mock_build_chain:
+         patch("app.fastapi_app.build_qa_chain") as mock_build_chain, \
+         patch("app.fastapi_app.SessionLocal", autospec=True) as mock_session:
 
+        # Fake chunks
         mock_loader.return_value = [
             Document(page_content="chunk1"),
             Document(page_content="chunk2")
         ]
 
-        # slow chain that triggers timeout
+        # Slow chain triggers timeout
         def slow_chain(query):
             import time
             time.sleep(35)
             return {"result": "too slow"}
 
         mock_build_chain.return_value = slow_chain
+
+        # Mock DB session (so test doesn’t actually touch Postgres)
+        mock_session.return_value.__enter__.return_value.add.return_value = None
+        mock_session.return_value.__enter__.return_value.commit.return_value = None
 
         response = client.post(
             "/upload_query",
@@ -103,3 +109,6 @@ def test_upload_query_timeout(tmp_path):
         )
 
         assert response.status_code == 504
+
+        # Optional: verify that DB session was created
+        assert mock_session.called, "DB session should be initialized (optional)"
