@@ -32,8 +32,8 @@ RAG_QA/
 │   ├── fastapi_app.py          # API endpoints
 │   |── settings.py             # Pydantic BaseSettings class that loads/validates config
 │   └── tests/
-│       └── test_api.py         # Unit tests (test_health (unit/system health check), test_settings_load (config unit test), test_query_endpoint (integration, with fallback mocking)
-|       └── test_integration.py # Integration tests (test_full_rag_pipeline (real end-to-end RAG))
+│       └── test_api.py         # Unit tests (unit/system health check, config unit test, integration test with fallback mocking)
+|       └── test_integration.py # Integration tests (real end-to-end RAG, time out test, full endpoint coverage (upload + query) with timeout logic)
 │       └── test_db.py          # DB connectivity (integration with Postgres, best to run only if DB container is up).
 |
 │── documents/                  # Explains process & implementation rollout for production via different phases
