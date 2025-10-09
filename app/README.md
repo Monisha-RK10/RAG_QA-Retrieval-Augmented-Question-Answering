@@ -41,12 +41,12 @@ User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(f
 
 ## Tests (Located in app/tests/)
 
-- `test_api.py` **(Light tests (run on every push/PR))**
+- `test_api.py` **(light tests, run on every push/PR)**
   - **Purpose:** Fast checks to catch obvious regressions before merge.
   - `test_health` → verifies API is alive.
   - `test_settings_load` → ensures environment/config parsing works.
   - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.
-- `test_integration.py` **(Heavy tests (manual trigger only, triggered by `workflow_dispatch` in GitHub Actions))**
+- `test_integration.py` **(heavy tests, manual trigger only, triggered by `workflow_dispatch` in GitHub Actions)**
   - **Purpose:** Full end-to-end correctness and robustness checks.
   - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
   - `test_qa_chain_timeout` → validates timeout handling in your async wrapper.
