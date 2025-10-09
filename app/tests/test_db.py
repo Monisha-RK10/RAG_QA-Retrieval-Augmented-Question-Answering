@@ -1,23 +1,36 @@
 # app/tests/test_db.py
-# test_db.py is an integration test that makes sure:
-  # You can open a DB session (SessionLocal()).
-  # Insert a Document row.
-  # Commit and retrieve it back.
-  # Assert it worked.
-# So test_db.py verifies the schema + connection actually work
+# Integration test for DB connectivity + schema.
+# Works in CI (SQLite) or locally (Postgres if available).
 
-# Note: test_db.py proves Postgres works in isolation. But in production, you want real app behavior.
-# fastapi_app.py is where we connect Postgres to the actual workflow i.e., When a user uploads a PDF → not only save file + embed → but also insert metadata row (filename, upload_time) into Postgres.
-# Without this, Postgres never gets used in the live pipeline (only in tests).
+import os
+import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app.db_models import Base, Document
 
-from app.db_models import SessionLocal, Document
+# Use SQLite in-memory for CI / automated tests
+DB_URL = os.environ.get("TEST_DATABASE_URL", "sqlite:///:memory:")
 
+engine = create_engine(DB_URL, connect_args={"check_same_thread": False} if "sqlite" in DB_URL else {})
+SessionLocal = sessionmaker(bind=engine)
+
+# Create tables for the test
+Base.metadata.create_all(bind=engine)
+
+@pytest.mark.integration_manual  # mark as manual integration test
 def test_db_insert():
+    """
+    Insert a Document row and read it back.
+    Works for SQLite in-memory or a real Postgres DB.
+    """
     session = SessionLocal()
-    doc = Document(filename="test.pdf")
-    session.add(doc)
-    session.commit()
+    try:
+        doc = Document(filename="test.pdf")
+        session.add(doc)
+        session.commit()
 
-    saved = session.query(Document).filter_by(filename="test.pdf").first()
-    assert saved is not None
-    session.close()
+        saved = session.query(Document).filter_by(filename="test.pdf").first()
+        assert saved is not None, "Document not saved to DB"
+        assert saved.filename == "test.pdf", "Filename mismatch"
+    finally:
+        session.close()
