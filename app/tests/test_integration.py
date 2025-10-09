@@ -1,8 +1,8 @@
 #test_integration.py
 # Integration tests for FastAPI app
 # ----------------------------------------------------
-# test_full_rag_pipeline  = Real end-to-end RAG check (integration) to assert that the answer is not empty
-# test_qa_chain_timeout   = Time out test (integartion) to assert that the timeout occurs
+# test_full_rag_pipeline  = Real end-to-end RAG check (integration) to assert that the answer is not empty. Tests direct objects: chunks → vectorstore → LLM → QA chain. No FastAPI endpoints (/query or /upload_query) ran directly.
+# test_qa_chain_timeout   = Time out test (integartion) to assert that the timeout occurs on qa_chain. No FastAPI endpoints (/query or /upload_query) ran directly.
 
 
 import pytest
