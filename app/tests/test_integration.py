@@ -56,3 +56,43 @@ def test_qa_chain_timeout():
             )
     finally:
         fa.qa_chain = original_qa_chain                                                      # finally restores the original qa_chain, so other tests are unaffected. It always runs, whether an exception occurs or not
+
+import pytest
+from fastapi.testclient import TestClient
+from pathlib import Path
+from app.fastapi_app import app, qa_chain
+import time
+import asyncio
+
+@pytest.mark.integration_manual
+def test_upload_query_timeout(tmp_path):
+    """Manually run: simulate uploading a PDF and a question that triggers timeout."""
+    
+    # Create a minimal mock PDF
+    pdf_file = tmp_path / "mock.pdf"
+    pdf_file.write_bytes(b"%PDF-1.4 mock content")
+
+    # Patch qa_chain to simulate a slow chain
+    original_chain = qa_chain
+    def slow_chain(query):
+        time.sleep(35)  # longer than timeout
+        return {"result": "too slow"}
+
+    from app import fastapi_app as fa
+    fa.qa_chain = slow_chain
+
+    client = TestClient(fa.app)
+
+    try:
+        response = client.post(
+            "/upload_query",
+            files={"file": ("mock.pdf", pdf_file.read_bytes())},
+            data={"question": "What is AI?"}
+        )
+        print("Status code:", response.status_code)
+        print("Response JSON:", response.json())
+        # Should trigger timeout
+        assert response.status_code == 504
+    finally:
+        # Restore original chain to avoid side effects
+        fa.qa_chain = original_chain
