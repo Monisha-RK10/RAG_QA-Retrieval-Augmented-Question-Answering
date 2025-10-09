@@ -47,7 +47,7 @@ def test_qa_chain_timeout():
     
     # run wait_for with to_thread
     try:
-        with pytest.raises(asyncio.TimeoutError):                                            # test just checks that TimeoutError is raised, pytest.raises asserts that the timeout happens
+        with pytest.raises(asyncio.TimeoutError):                                            # pytest.raises asserts that the timeout happens. Expect the code block inside to raise TimeoutError. If it does, the test passes; if not, the test fails. with is for context-specific setup/expectation
             asyncio.run(
                 asyncio.wait_for(                                                            # await lets the async code (like FastAPI endpoints) pause/resume while the blocking function runs in another thread.
                     asyncio.to_thread(fa.qa_chain, {"query": "What is AI?"}),                # qa_chain is synchronous: it runs from start to finish and cannot be paused/resumed, asyncio.to_thread(qa_chain, args) wraps it in a thread, returning an awaitable coroutine.
@@ -55,4 +55,4 @@ def test_qa_chain_timeout():
                 )
             )
     finally:
-        fa.qa_chain = original_qa_chain
+        fa.qa_chain = original_qa_chain                                                      # finally restores the original qa_chain, so other tests are unaffected. It always runs, whether an exception occurs or not
