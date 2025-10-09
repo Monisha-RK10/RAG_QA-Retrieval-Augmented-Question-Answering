@@ -1,18 +1,18 @@
 # app/tests/test_db.py
 # Integration test for DB connectivity + schema.
 # Works in CI (SQLite) or locally (Postgres if available).
-import os
-os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"  # Must be **before** importing db_models
 
 import os
+os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"  # must be set BEFORE importing db_models
+
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
 from app.db_models import Base, Document
 
-# Use SQLite in-memory for CI / automated tests
-DB_URL = os.environ.get("TEST_DATABASE_URL", "sqlite:///:memory:")
-
+# Use the env var
+DB_URL = os.environ.get("TEST_DATABASE_URL")
 engine = create_engine(DB_URL, connect_args={"check_same_thread": False} if "sqlite" in DB_URL else {})
 SessionLocal = sessionmaker(bind=engine)
 
