@@ -73,30 +73,33 @@ import app.fastapi_app as fa
 import time
 import pytest
 
+from unittest.mock import patch
+
 @pytest.mark.integration
 def test_upload_query_timeout(tmp_path):
     client = TestClient(fa.app)
 
     # Patch load_and_chunk_pdf to return fake Document objects
-    with patch("app.fastapi_app.load_and_chunk_pdf") as mock_loader:
+    with patch("app.fastapi_app.load_and_chunk_pdf") as mock_loader, \
+         patch("app.fastapi_app.build_qa_chain") as mock_build_chain:
+
         mock_loader.return_value = [
             Document(page_content="chunk1"),
             Document(page_content="chunk2")
         ]
 
-        # Patch qa_chain to simulate slow processing
-        original_chain = fa.qa_chain
+        # slow chain that triggers timeout
         def slow_chain(query):
-            time.sleep(35)  # longer than 30s timeout
+            import time
+            time.sleep(35)
             return {"result": "too slow"}
-        fa.qa_chain = slow_chain
 
-        try:
-            response = client.post(
-                "/upload_query",
-                files={"file": ("mock.pdf", b"%PDF-1.4 mock content")},
-                data={"question": "What is AI?"}
-            )
-            assert response.status_code == 504
-        finally:
-            fa.qa_chain = original_chain
+        mock_build_chain.return_value = slow_chain
+
+        response = client.post(
+            "/upload_query",
+            files={"file": ("mock.pdf", b"%PDF-1.4 mock content")},
+            data={"question": "What is AI?"}
+        )
+
+        assert response.status_code == 504
