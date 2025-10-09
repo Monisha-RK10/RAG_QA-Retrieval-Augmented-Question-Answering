@@ -27,7 +27,7 @@
   - `/health` → Lightweight (service model + db )check
   - `/query` → Query existing RAG pipeline (cached vectorstore + LLM) with timeout
   - `/upload_query` → Upload PDF + embed + query immediately with timeout
- - `db_models.py`  → Flow: What happens when a PDF is uploaded? Supports SQLite (CI tes) and Postgres (Docker)
+ - `db_models.py`  → Flow: What happens when a PDF is uploaded? Supports SQLite (CI test) and Postgres (Docker)
 
 ``` bash
 User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
