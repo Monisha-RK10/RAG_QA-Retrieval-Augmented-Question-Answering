@@ -30,12 +30,12 @@ RAG_QA/
 │   ├── embeddings.py           # Embeddings + Chroma vectorstore
 │   ├── llm.py                  # LLM loading + quantization
 │   ├── chain.py                # RAG pipeline (retriever + LLM chain)
-│   ├── fastapi_app.py          # API endpoints
+│   ├── fastapi_app.py          # API endpoints (health, query, upload_query (pdf+query))
 │   |── settings.py             # Pydantic BaseSettings class that loads/validates config
 │   └── tests/
 │       └── test_api.py         # Unit tests (system health check, config unit test)
 |       └── test_integration.py # Integration tests (internal end-to-end RAG, internal async time out, `/upload_query` (upload pdf + query) timeout logic, `/query` test with fallback mocking)
-│       └── test_db.py          # DB connectivity (integration with Postgres, best to run only if DB container is up).
+│       └── test_db.py          # DB connectivity (supports SQLite (CI test) and Postgres (Docker)).
 |
 │── documents/                  # Explains process & implementation rollout for production via different phases
 │── db/                         # Persisted vectorstore
