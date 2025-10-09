@@ -35,7 +35,7 @@
 - `test_integration.py` 
   - **Purpose:** Full end-to-end correctness and robustness checks.
   - **Heavy tests, manual trigger only, triggered by `workflow_dispatch` in GitHub Actions**
-    - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
+    - `test_full_rag_pipeline` → PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
     - `test_qa_chain_timeout` → validates timeout handling in the async wrapper.
     - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
     - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.  
