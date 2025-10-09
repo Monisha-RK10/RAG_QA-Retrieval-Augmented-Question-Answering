@@ -19,8 +19,7 @@
    - **Flow:** What happens when a PDF is uploaded?
    - **Supports:** SQLite (CI test) and Postgres (Docker)
    - User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
-
-| id | filename   | upload_time         |
+   - | id | filename   | upload_time         |
 | -- | ---------- | ------------------- |
 | 1  | report.pdf | 2025-10-04 16:30:00 |
 | 2  | notes.pdf  | 2025-10-04 16:32:10 |
