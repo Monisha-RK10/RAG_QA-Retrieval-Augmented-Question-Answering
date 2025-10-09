@@ -24,6 +24,8 @@ from pathlib import Path
 
 from unittest.mock import patch
 
+from langchain.schema import Document
+
 # ---------- INTEGRATION TESTS ----------
 
 
@@ -64,16 +66,6 @@ def test_qa_chain_timeout():
     finally:
         fa.qa_chain = original_qa_chain                                                      # finally restores the original qa_chain, so other tests are unaffected. It always runs, whether an exception occurs or not
 
-
-from unittest.mock import patch
-from fastapi.testclient import TestClient
-from langchain.schema import Document
-import app.fastapi_app as fa
-
-import time
-import pytest
-
-from unittest.mock import patch
 
 @pytest.mark.integration
 def test_upload_query_timeout(tmp_path):
