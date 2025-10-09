@@ -6,11 +6,6 @@ from app.llm import load_llm
 from app.chain import build_qa_chain
 from app.settings import settings
 
-from app.fastapi.testclient import TestClient
-from app.fastapi_app import app
-from app.fastapi_app import app
-
-client = TestClient(app)
 
 @pytest.mark.integration
 def test_full_rag_pipeline():
