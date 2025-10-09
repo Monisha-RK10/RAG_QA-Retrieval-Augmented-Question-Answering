@@ -6,6 +6,11 @@ from app.llm import load_llm
 from app.chain import build_qa_chain
 from app.settings import settings
 
+from fastapi.testclient import TestClient
+from fastapi_app import app
+
+client = TestClient(app)
+
 @pytest.mark.integration
 def test_full_rag_pipeline():
     chunks = load_and_chunk_pdf(f"{settings.data_dir}/{settings.default_pdf_name}")
