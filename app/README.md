@@ -45,12 +45,12 @@ User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(f
   - **Purpose:** Fast checks to catch obvious regressions before merge.
   - `test_health` → verifies API is alive.
   - `test_settings_load` → ensures environment/config parsing works.
-  - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.
 - `test_integration.py` **(heavy tests, manual trigger only, triggered by `workflow_dispatch` in GitHub Actions)**
   - **Purpose:** Full end-to-end correctness and robustness checks.
   - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
-  - `test_qa_chain_timeout` → validates timeout handling in your async wrapper.
+  - `test_qa_chain_timeout` → validates timeout handling in the async wrapper.
   - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
+  - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.
   
 - `test_db.py` **(works both locally (Postgres) and in CI/CD (SQLite))**
   - **Purpose:** To confirm Postgres connection works inside docker-compose
