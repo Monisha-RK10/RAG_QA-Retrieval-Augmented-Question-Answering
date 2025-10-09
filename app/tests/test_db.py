@@ -27,7 +27,7 @@ SessionLocal = sessionmaker(bind=engine)
 # Create tables for the test
 Base.metadata.create_all(bind=engine)
 
-@pytest.mark.integration_manual  # mark as manual integration test
+@pytest.mark.integration
 def test_db_insert():
     """
     Insert a Document row and read it back.
