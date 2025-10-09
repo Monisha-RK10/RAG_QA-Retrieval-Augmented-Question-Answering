@@ -6,7 +6,7 @@
 # This test doesn’t test your API, but it tests the foundation under the API (the ability to connect to the database, create tables, insert, query, and close safely.)
 
 import os
-os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"                         # Must be set BEFORE importing db_models, “inject” a fake DB URL creates a temporary, in-memory SQLite database (no file written).
+os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"                                # Must be set BEFORE importing db_models, “inject” a fake DB URL creates a temporary, in-memory SQLite database (no file written).
 
 # Note: 
 # Normal app run: No TEST_DATABASE_URL set → uses Postgres from settings i.e., DB engine points to the Postgres container (hostname postgres). This works only inside Docker where that hostname is valid
@@ -15,7 +15,6 @@ os.environ["TEST_DATABASE_URL"] = "sqlite:///:memory:"                         #
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 from app.db_models import Base, Document
 
 # Use the env var
