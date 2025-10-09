@@ -1,11 +1,12 @@
 #test_integration.py
 import pytest
+from app.fastapi_app import app
+
 from app.loader import load_and_chunk_pdf
 from app.embeddings import load_or_create_vectorstore
 from app.llm import load_llm
 from app.chain import build_qa_chain
 from app.settings import settings
-
 
 @pytest.mark.integration
 def test_full_rag_pipeline():
