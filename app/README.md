@@ -24,13 +24,15 @@
 - `llm.py` → Loads the language model, with quantization (int8 & compile) optimizations + batch inference + fallback strategy i.e., **Production tweak #2, #3, #4**.
 - `chain.py` → Builds the QA chain (Retriever + LLM + optional metadata filtering + guardrails via prompt instructions) i.e., **Production tweak #5, #6**.
 - `fastapi_app.py` → FastAPI server exposing API endpoints with model caching + timeouts i.e., **Production tweak #7, #8**:
-  - `/query` → Ask questions against existing vectorstore with timeout.
-  - `/upload_query` → Upload a new PDF + immediately query it with timeout.
-  - `/health` → Service availability + DB status check.
+  - `/health` → Lightweight service check
+  - `/query` → Query existing RAG pipeline (cached vectorstore + LLM) with timeout
+  - `/upload_query` → Upload PDF + embed + query immediately with timeout
  - `db_models.py`  → Flow: What happens when a PDF is uploaded? 
+
 ``` bash
 User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
 ```
+
 | id | filename   | upload_time         |
 | -- | ---------- | ------------------- |
 | 1  | report.pdf | 2025-10-04 16:30:00 |
@@ -39,13 +41,15 @@ User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(f
 
 ## Tests (Located in app/tests/)
 
-- `test_api.py` (runs every push/PR)
-  - `test_health` → API health check.
-  - `test_settings_load` → Config parsing test.
-  - `test_query_endpoint` → API + pipeline integration.
-- `test_integration.py` (run heavy tests manually)
-  - `test_full_rag_pipeline` → Real end-to-end RAG check (integration).
-  - `test_qa_chain_timeout` → Time out test. 
-  - `test_upload_query_timeout` → Full endpoint coverage (upload + query) with timeout logic (simulate uploading a PDF + question to /upload_query).
+- `test_api.py` **(Light tests (run on every push/PR))**
+- **Purpose:** Fast checks to catch obvious regressions before merge.
+  - `test_health` → verifies API is alive.
+  - `test_settings_load` → ensures environment/config parsing works.
+  - `test_query_endpoint` → minimal integration check that your /query endpoint runs and returns a response.
+- `test_integration.py` **(Heavy tests (manual trigger only, triggered by `workflow_dispatch` in GitHub Actions))**
+- **Purpose:** Full end-to-end correctness and robustness checks.
+  - `test_full_rag_pipeline` → ensures PDF → chunks → vector DB → LLM → answer pipeline works end-to-end.
+  - `test_qa_chain_timeout` → validates timeout handling in your async wrapper.
+  - `test_upload_query_timeout` → validates the new /upload_query endpoint: upload + embed + query with enforced timeout.
   
 - `test_db.py` → To confirm Postgres connection works inside docker-compose
