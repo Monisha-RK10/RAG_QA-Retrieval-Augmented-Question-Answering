@@ -94,4 +94,13 @@ def test_upload_query_timeout(tmp_path):
             data={"question": "What is AI?"}
         )
 
+  
+@pytest.mark.integration
+def test_query_endpoint():
+    response = client.post(
+        "/query",
+        json={"question": "What is the advantage of Index hot-swapping?"}
+    )
+    assert response.status_code == 200
+    print(response.json())           
         assert response.status_code == 504
