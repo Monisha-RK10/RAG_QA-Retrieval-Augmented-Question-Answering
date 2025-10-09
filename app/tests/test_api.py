@@ -16,7 +16,6 @@ client = TestClient(app)
 # ---------- UNIT TESTS ----------
 
 @pytest.mark.unit
-@app.get("/health")
 def test_health_db():
     """
     Unit test for health endpoint with DB connectivity check.
