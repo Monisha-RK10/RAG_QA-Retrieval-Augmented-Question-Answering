@@ -98,4 +98,4 @@ def test_query_endpoint():
     )
     assert response.status_code == 200
     print(response.json())           
-        assert response.status_code == 504
+    assert response.status_code == 504
