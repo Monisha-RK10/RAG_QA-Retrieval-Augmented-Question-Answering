@@ -24,7 +24,6 @@ from langchain.schema import Document
 
 # ---------- INTEGRATION TESTS ----------
 
-
 @pytest.mark.integration
 def test_full_rag_pipeline():
     chunks = load_and_chunk_pdf(f"{settings.data_dir}/{settings.default_pdf_name}")
