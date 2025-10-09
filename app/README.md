@@ -24,10 +24,10 @@
 - `llm.py` → Loads the language model, with quantization (int8 & compile) optimizations + batch inference + fallback strategy i.e., **Production tweak #2, #3, #4**.
 - `chain.py` → Builds the QA chain (Retriever + LLM + optional metadata filtering + guardrails via prompt instructions) i.e., **Production tweak #5, #6**.
 - `fastapi_app.py` → FastAPI server exposing API endpoints with model caching + timeouts i.e., **Production tweak #7, #8**:
-  - `/health` → Lightweight service check
+  - `/health` → Lightweight (service model + db )check
   - `/query` → Query existing RAG pipeline (cached vectorstore + LLM) with timeout
   - `/upload_query` → Upload PDF + embed + query immediately with timeout
- - `db_models.py`  → Flow: What happens when a PDF is uploaded? 
+ - `db_models.py`  → Flow: What happens when a PDF is uploaded? Supports SQLite (CI tes) and Postgres (Docker)
 
 ``` bash
 User uploads PDF (handled in FastAPI) → explicitly call session.add(Document(filename="myfile.pdf"))  → That creates a new row in documents table:
