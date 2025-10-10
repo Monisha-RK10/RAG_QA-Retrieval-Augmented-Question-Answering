@@ -11,6 +11,8 @@ services:
       - postgres       # Waits for postgres container
     environment:
       - CONFIG_PATH=/app/config.yaml   # Pass config path to app
+    volumes:
+      - ./app:/app/app   # Mount only the app folder
 #    volumes:
 #      - .:/app   # Mount your repo into the container
 
