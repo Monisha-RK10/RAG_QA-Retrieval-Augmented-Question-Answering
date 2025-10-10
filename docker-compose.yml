@@ -13,8 +13,8 @@ services:
       - CONFIG_PATH=/app/config.yaml   # Pass config path to app
 #    volumes:
 #      - ./app:/app/app   # Mount only the app folder
-#    volumes:
-#      - .:/app   # Mount your repo into the container
+    volumes:
+      - .:/app   # Mount your repo into the container
 
   postgres:   # Database
     image: postgres:15
