@@ -18,6 +18,7 @@ from app.loader import load_and_chunk_pdf
 from app.embeddings import load_or_create_vectorstore
 from app.chain import build_qa_chain
 from app.db_models import SessionLocal  
+from sqlalchemy import text
 
 # Keep potentially heavy imports inside startup / handlers to avoid import-time failures in CI.
 
@@ -130,7 +131,8 @@ async def health_check():
     try:
         # Try to connect to DB
         session = SessionLocal()
-        session.execute("SELECT 1")
+        session.execute(text("SELECT 1"))
+       # session.execute("SELECT 1")
         session.close()
         return {"status": "ok", "db": "connected"}
     except Exception as e:
