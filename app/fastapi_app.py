@@ -183,7 +183,9 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
 
     # Create vectorstore and QA chain
     vectordb_local = load_or_create_vectorstore(chunks, persist_directory=str(DB_DIR))
-    qa_chain_local = build_qa_chain(qa_chain=qa_chain, vectordb=vectordb_local)  # or llm as needed
+  #  qa_chain_local = build_qa_chain(qa_chain=qa_chain, vectordb=vectordb_local)  # or llm as needed
+    qa_chain_local = build_qa_chain(llm=llm, vectordb=vectordb_local)
+
 
     # Run query with timeout
     try:
