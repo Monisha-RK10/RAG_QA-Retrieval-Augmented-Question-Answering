@@ -89,7 +89,6 @@ curl http://51.21.196.36:8000/health
 → {"status":"ok","db":"connected"}
 ```
 - **API Docs**
-
 Swagger UI available at →
 🔗 [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)
 
@@ -97,4 +96,4 @@ Swagger UI available at →
 ![Swagger UI Screenshot](https://github.com/Monisha-RK10//RAG_QA-Retrieval-Augmented-Question-Answering/blob/main/output/swagger_ui.png?raw=true)
 
 ### Sample Prediction (Query)
-![Prediction result](https://github.com/Monisha-RK10//RAG_QA-Retrieval-Augmented-Question-Answering/blob/main/output/output_predict.png?raw=true)
+![Prediction result](https://github.com/Monisha-RK10//RAG_QA-Retrieval-Augmented-Question-Answering/blob/main/output/predict_output.png?raw=true)
