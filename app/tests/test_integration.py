@@ -70,7 +70,15 @@ def test_upload_query_timeout(tmp_path):
 
     # Patch load_and_chunk_pdf to return fake Document objects
     with patch("app.fastapi_app.load_and_chunk_pdf") as mock_loader, \
-         patch("app.fastapi_app.build_qa_chain") as mock_build_chain:
+        # patch("app.fastapi_app.build_qa_chain") as mock_build_chain:
+         patch("app.fastapi_app.build_qa_chain") as mock_build_chain, \
+         patch("app.fastapi_app.asyncio.wait_for") as mock_wait_for:
+
+        # Optional: fake PDF chunks if your endpoint uses them
+        mock_loader.return_value = [
+            fa.Document(page_content="chunk1"),
+            fa.Document(page_content="chunk2")
+        ]
 
     #    mock_loader.return_value = [
     #        Document(page_content="chunk1"),
@@ -82,11 +90,15 @@ def test_upload_query_timeout(tmp_path):
     #        import time
     #        time.sleep(35)
     #        return {"result": "too slow"}
-
-     #   mock_build_chain.return_value = slow_chain
+    #   mock_build_chain.return_value = slow_chain
+             
+        # Patch build_qa_chain to a fast dummy function
         mock_build_chain.return_value = lambda query: {"result": "too slow"}
+
+        # Patch asyncio.wait_for to immediately raise TimeoutError
         mock_wait_for.side_effect = asyncio.TimeoutError
 
+        # Call the endpoint
         response = client.post(
             "/upload_query",
             files={"file": ("mock.pdf", b"%PDF-1.4 mock content")},
