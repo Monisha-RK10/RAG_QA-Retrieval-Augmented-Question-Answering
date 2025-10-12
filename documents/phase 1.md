@@ -56,6 +56,49 @@ All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_t
 
 ---
 ### Step 3: Deployment Target
+
+**Goal:** Deploy FastAPI + RAG API to a live cloud environment with Postgres connectivity, accessible via public endpoint.
+
 - Pick a deployment target (Render, Cloud Run, or a cheap VM).
 - Deploy with docker-compose up so Postgres + FastAPI run together in the cloud.
+
+**Deployment Steps**
+
+- **Provision a Cloud VM (AWS EC2)**
+  - Created a t2.medium Ubuntu 22.04 instance on AWS EC2.
+  - Configured Security Groups to open:
+    - `22` → SSH (restricted to my IP)
+    - `8000 `→ FastAPI HTTP traffic
+    - `5432` → Postgres (only for internal or trusted IPs)
+  - Verified inbound/outbound rules via AWS Console → Network → Security Groups.
+- **SSH Setup and Deployment**
+```bash
+ssh -i "rag_server.pem" ubuntu@<EC2_PUBLIC_IP>
+git clone https://github.com/monisha-ai/RAG_QA.git
+cd RAG_QA
+docker compose up --build -d
+```
+- FastAPI container served at 0.0.0.0:8000.
+- Connected to cloud Postgres via connection string in config.yaml.
+
+- **Reverse Proxy (Optional)**
+  - Use Nginx to route incoming requests on port 80 → FastAPI :8000.
+  - Configure simple systemd service for auto-restart.
+
+- **Validation**
+```bash
+curl http://51.21.196.36:8000/health
+→ {"status":"ok","db":"connected"}
+```
+```bash
+curl -X POST "http://51.21.196.36:8000/query" \
+    -H "Content-Type: application/json" \
+    -d '{"question": "What is p(y|x)?"}'
+→ {"answer":"p(y|x) via a top-K approximation ..."}
+```
+
+- **API Docs**
+
+Swagger UI available at →
+🔗 http://51.21.196.36:8000/docs
 ---
