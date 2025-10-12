@@ -72,8 +72,8 @@ All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_t
     - `5432` → Postgres (only for internal or trusted IPs)
   - Verified inbound/outbound rules via AWS Console → Network → Security Groups.
 - **SSH Setup and Deployment**
-- FastAPI container served at 0.0.0.0:8000.
-- Connected to cloud Postgres via connection string in config.yaml.
+  - FastAPI container served at 0.0.0.0:8000.
+  - Connected to cloud Postgres via connection string in config.yaml.
 ```bash
 ssh -i "rag_server.pem" ubuntu@<EC2_PUBLIC_IP>
 git clone https://github.com/monisha-ai/RAG_QA.git
@@ -83,7 +83,6 @@ docker compose up --build -d
 - **Reverse Proxy (Optional)**
   - Use Nginx to route incoming requests on port 80 → FastAPI :8000.
   - Configure simple systemd service for auto-restart.
-
 - **Validation**
 ```bash
 curl http://51.21.196.36:8000/health
