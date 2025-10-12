@@ -61,22 +61,6 @@ RAG_QA/
 
 ---
 
-## Deployment Status (Phase 1)
-
-**Live Demo (AWS EC2)**  
-- **Public API:** [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)  
-  *(Swagger UI — try `/query`, `/upload_query`, `/health` interactively)*  
-- **Database:** Cloud Postgres (Supabase), connected via SQLAlchemy  
-- **Backend:** FastAPI + Docker + Gunicorn/Uvicorn  
-- **Hosting:** AWS EC2 (Ubuntu 20.04), port 8000 open via security group  
-
-**Health Check**  
-```bash
-curl http://51.21.196.36:8000/health
-→ {"status": "ok", "db": "connected"}
-```
----
-
 ## Future Steps
 
 - Containerization (Docker, Kubernetes)
@@ -108,7 +92,28 @@ curl http://51.21.196.36:8000/health
 
 ---
 
+## Deployment Status (Phase 1)
 
+**Live Demo (AWS EC2)**  
+- **Public API:** [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)  
+  *(Swagger UI — try `/query`, `/upload_query`, `/health` interactively)*  
+- **Database:** Cloud Postgres (Supabase), connected via SQLAlchemy  
+- **Backend:** FastAPI + Docker + Gunicorn/Uvicorn  
+- **Hosting:** AWS EC2 (Ubuntu 20.04), port 8000 open via security group  
+
+**Health Check**  
+```bash
+curl http://51.21.196.36:8000/health
+→ {"status": "ok", "db": "connected"}
+```
+
+### Swagger UI (Try the API interactively):
+![Swagger UI Screenshot](output/swagger_ui.png?raw=true)
+
+### Sample Prediction (Query)
+![Prediction result](output/predict_output.png?raw=true)
+
+---
 ## Author
 
 **Monisha**  
