@@ -9,18 +9,6 @@ Blog post (concept + pipeline walkthrough):
 
 ---
 
-
-# RAG_QA: Retrieval-Augmented Question Answering  
-
-![Python](https://img.shields.io/badge/Python-3.10-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-🚀-brightgreen)
-![CI Tests](https://github.com/Monisha-RK10/RAG_QA-Retrieval-Augmented-Question-Answering/actions/workflows/tests.yml/badge.svg)
-![Deployed on](https://img.shields.io/badge/Deployed%20on-AWS%20EC2-orange)
-
-This project implements a Retrieval-Augmented Generation (RAG) pipeline for question answering over PDFs.
-It combines vector search + large language models and serves results via a FastAPI backend.
-
----
 ## Pipeline Overview
 
 - Loader → Parse & chunk PDFs into text passages.
