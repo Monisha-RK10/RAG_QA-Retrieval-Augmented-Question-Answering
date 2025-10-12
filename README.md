@@ -9,22 +9,6 @@ Blog post (concept + pipeline walkthrough):
 
 ---
 
-## Deployment Status (Phase 1)
-
-**Live Demo (AWS EC2)**  
-- **Public API:** [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)  
-  *(Swagger UI — try `/query`, `/upload_query`, `/health` interactively)*  
-- **Database:** Cloud Postgres (Supabase), connected via SQLAlchemy  
-- **Backend:** FastAPI + Docker + Gunicorn/Uvicorn  
-- **Hosting:** AWS EC2 (Ubuntu 20.04), port 8000 open via security group  
-
-**Health Check**  
-```bash
-curl http://51.21.196.36:8000/health
-→ {"status": "ok", "db": "connected"}
-
----
-
 ## Pipeline Overview
 
 - Loader → Parse & chunk PDFs into text passages.
@@ -75,6 +59,22 @@ RAG_QA/
 7. **Model Caching at Startup** → No repeated heavy init per request.
 8. **Timeouts** → Prevent hanging requests.
 
+---
+
+## Deployment Status (Phase 1)
+
+**Live Demo (AWS EC2)**  
+- **Public API:** [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)  
+  *(Swagger UI — try `/query`, `/upload_query`, `/health` interactively)*  
+- **Database:** Cloud Postgres (Supabase), connected via SQLAlchemy  
+- **Backend:** FastAPI + Docker + Gunicorn/Uvicorn  
+- **Hosting:** AWS EC2 (Ubuntu 20.04), port 8000 open via security group  
+
+**Health Check**  
+```bash
+curl http://51.21.196.36:8000/health
+→ {"status": "ok", "db": "connected"}
+```
 ---
 
 ## Future Steps
