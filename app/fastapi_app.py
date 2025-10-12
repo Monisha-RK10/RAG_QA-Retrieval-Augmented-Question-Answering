@@ -155,7 +155,7 @@ async def query_document(request: QueryRequest):
     try:
         result = await asyncio.wait_for(
             asyncio.to_thread(qa_chain, {"query": request.question}),
-            timeout=30
+            timeout=500
         )
         return {"answer": result.get("result", f"mocked result for: {request.question}")}
     except asyncio.TimeoutError:
@@ -186,12 +186,11 @@ async def upload_query(file: UploadFile = File(...), question: str = ""):
   #  qa_chain_local = build_qa_chain(qa_chain=qa_chain, vectordb=vectordb_local)  # or llm as needed
     qa_chain_local = build_qa_chain(llm=llm, vectordb=vectordb_local)
 
-
     # Run query with timeout
     try:
         result = await asyncio.wait_for(
             asyncio.to_thread(qa_chain_local, {"query": question}),
-            timeout=30
+            timeout=1000
         )
     except asyncio.TimeoutError:
         raise HTTPException(status_code=504, detail="Query timed out after 30s")
