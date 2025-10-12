@@ -98,7 +98,8 @@ RAG_QA/
 
 **Live Demo (AWS EC2)**  
 - **Public API:** [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)  
-  *(Swagger UI — try `/query`, `/upload_query`, `/health` interactively),**Note:** Hosted on AWS EC2, if temporarily offline, please run via Docker Compose locally as per setup instructions.*  
+  *(Swagger UI — try `/query`, `/upload_query`, `/health` interactively)*
+- **Note:** Hosted on AWS EC2, if temporarily offline, please run via Docker Compose locally as per setup instructions. 
 - **Database:** Cloud Postgres (Supabase), connected via SQLAlchemy  
 - **Backend:** FastAPI + Docker + Gunicorn/Uvicorn  
 - **Hosting:** AWS EC2 (Ubuntu 20.04), port 8000 open via security group
