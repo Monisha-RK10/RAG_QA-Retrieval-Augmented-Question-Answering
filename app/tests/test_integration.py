@@ -68,43 +68,33 @@ def test_qa_chain_timeout():
 def test_upload_query_timeout(tmp_path):
     client = TestClient(fa.app)
 
-    # Patch load_and_chunk_pdf to return fake Document objects
+    # Patch load_and_chunk_pdf, build_qa_chain, and asyncio.wait_for
     with patch("app.fastapi_app.load_and_chunk_pdf") as mock_loader, \
-        # patch("app.fastapi_app.build_qa_chain") as mock_build_chain:
          patch("app.fastapi_app.build_qa_chain") as mock_build_chain, \
          patch("app.fastapi_app.asyncio.wait_for") as mock_wait_for:
 
-        # Optional: fake PDF chunks if your endpoint uses them
+        # Fake PDF chunks (simulate chunked pages)
         mock_loader.return_value = [
-            fa.Document(page_content="chunk1"),
-            fa.Document(page_content="chunk2")
+            Document(page_content="chunk1"),
+            Document(page_content="chunk2")
         ]
 
-    #    mock_loader.return_value = [
-    #        Document(page_content="chunk1"),
-    #        Document(page_content="chunk2")
-    #    ]
-
-    #    # slow chain that triggers timeout
-    #    def slow_chain(query):
-    #        import time
-    #        time.sleep(35)
-    #        return {"result": "too slow"}
-    #   mock_build_chain.return_value = slow_chain
-             
-        # Patch build_qa_chain to a fast dummy function
+        # Build chain returns dummy slow-like function
         mock_build_chain.return_value = lambda query: {"result": "too slow"}
 
-        # Patch asyncio.wait_for to immediately raise TimeoutError
+        # Force asyncio.wait_for to immediately raise TimeoutError
         mock_wait_for.side_effect = asyncio.TimeoutError
 
-        # Call the endpoint
+        # Call endpoint
         response = client.post(
             "/upload_query",
             files={"file": ("mock.pdf", b"%PDF-1.4 mock content")},
             data={"question": "What is AI?"}
         )
+
+        # Expect 504 timeout response
         assert response.status_code == 504
+
   
 @pytest.mark.integration
 def test_query_endpoint():
