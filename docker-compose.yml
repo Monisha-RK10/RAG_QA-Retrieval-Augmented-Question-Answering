@@ -10,6 +10,8 @@ services:
     depends_on:
       - postgres       # Waits for postgres container
     environment:
+      - SKIP_DB_INIT=false
+      - TEST_DATABASE_URL=postgresql://raguser:ragpass@postgres:5432/ragdb
       - CONFIG_PATH=/app/config.yaml   # Pass config path to app
 #    volumes:
 #      - ./app:/app/app   # Mount only the app folder
