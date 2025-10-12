@@ -88,20 +88,13 @@ docker compose up --build -d
 curl http://51.21.196.36:8000/health
 → {"status":"ok","db":"connected"}
 ```
-```bash
-curl -X POST "http://51.21.196.36:8000/query" \
-    -H "Content-Type: application/json" \
-    -d '{"question": "What is p(y|x)?"}'
-→ {"answer":"p(y|x) via a top-K approximation ..."}
-```
-
 - **API Docs**
-
-**API Docs**
-
+  
+### Swagger UI (Try the API interactively):
 ![Swagger UI Screenshot](https://github.com/Monisha-RK10//RAG_QA-Retrieval-Augmented-Question-Answering/blob/main/output/swagger_ui.png?raw=true)
-
 
 Swagger UI available at →
 🔗 [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)
 
+### Sample Prediction (Query)
+!(https://github.com/Monisha-RK10//RAG_QA-Retrieval-Augmented-Question-Answering/blob/main/output/output_predict.png?raw=true)
