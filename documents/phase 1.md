@@ -99,7 +99,8 @@ curl -X POST "http://51.21.196.36:8000/query" \
 
 **API Docs**
 
-![Swagger UI Screenshot](../../output/swagger_ui.png)
+![Swagger UI Screenshot](https://github.com/Monisha-RK10//RAG_QA-Retrieval-Augmented-Question-Answering/blob/main/output/swagger_ui.png?raw=true)
+
 
 Swagger UI available at →
 🔗 [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)
