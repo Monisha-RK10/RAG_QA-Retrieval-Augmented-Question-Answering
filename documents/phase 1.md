@@ -97,6 +97,8 @@ curl -X POST "http://51.21.196.36:8000/query" \
 
 - **API Docs**
 
+![Swagger UI Screenshot](output/swagger_ui.png) 
+
 Swagger UI available at →
 🔗 http://51.21.196.36:8000/docs
 ---
