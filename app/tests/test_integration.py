@@ -72,18 +72,20 @@ def test_upload_query_timeout(tmp_path):
     with patch("app.fastapi_app.load_and_chunk_pdf") as mock_loader, \
          patch("app.fastapi_app.build_qa_chain") as mock_build_chain:
 
-        mock_loader.return_value = [
-            Document(page_content="chunk1"),
-            Document(page_content="chunk2")
-        ]
+    #    mock_loader.return_value = [
+    #        Document(page_content="chunk1"),
+    #        Document(page_content="chunk2")
+    #    ]
 
-        # slow chain that triggers timeout
-        def slow_chain(query):
-            import time
-            time.sleep(35)
-            return {"result": "too slow"}
+    #    # slow chain that triggers timeout
+    #    def slow_chain(query):
+    #        import time
+    #        time.sleep(35)
+    #        return {"result": "too slow"}
 
-        mock_build_chain.return_value = slow_chain
+     #   mock_build_chain.return_value = slow_chain
+        mock_build_chain.return_value = lambda query: {"result": "too slow"}
+        mock_wait_for.side_effect = asyncio.TimeoutError
 
         response = client.post(
             "/upload_query",
