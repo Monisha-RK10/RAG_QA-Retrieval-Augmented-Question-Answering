@@ -94,6 +94,7 @@ Swagger UI available at →
 🔗 [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)
 
 ### Swagger UI (Try the API interactively):
+**Note:** Hosted on AWS EC2, if temporarily offline, please run via Docker Compose locally as per setup instructions.
 ![Swagger UI Screenshot](https://github.com/Monisha-RK10//RAG_QA-Retrieval-Augmented-Question-Answering/blob/main/output/swagger_ui.png?raw=true)
 
 ### Sample Prediction (Query)
