@@ -89,6 +89,7 @@ curl http://51.21.196.36:8000/health
 → {"status":"ok","db":"connected"}
 ```
 - **API Docs**
+
 Swagger UI available at →
 🔗 [http://51.21.196.36:8000/docs](http://51.21.196.36:8000/docs)
 
