@@ -64,6 +64,25 @@ All rows: [{'id': 1, 'filename': '/content/RAG_QA/data/RAG_Paper.pdf', 'upload_t
 
 **Deployment Steps**
 
+                 ┌───────────────────────────────┐
+                 │ AWS EC2 Instance              │
+                 │ (Ubuntu, Docker Compose)      │
+                 │                               │
+                 │  ┌───────────────┐            │
+                 │  │ FastAPI App   │◄───Port 8000
+                 │  └───────────────┘            │
+                 │  ┌───────────────┐            │
+                 │  │ Chroma Vector │            │
+                 │  └───────────────┘            │
+                 │                               │
+                 └──────────────┬────────────────┘
+                                │
+                                ▼
+                 ┌───────────────────────────────┐
+                 │ AWS RDS (Postgres)            │
+                 └───────────────────────────────┘
+
+
 - **Provision a Cloud VM (AWS EC2)**
   - Created a t2.medium Ubuntu 22.04 instance on AWS EC2.
   - Configured Security Groups to open:
