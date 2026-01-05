@@ -6,7 +6,26 @@
 
 ### 1. Why Dockerize FastAPI?
 To make your app portable, reproducible. For this, add 'Dockerfile'. It build image → copy code inside → when container runs, start uvicorn server.
-
+```
+Browser (host)
+   |
+   | http://localhost:8000
+   v
+Docker port mapping
+   |
+   v
+Container (Linux)
+   |
+   | FastAPI listening on :8000
+   v
+FastAPI app
+```
+- Image = class, Container = object
+- Container → isolated Linux environment
+- FastAPI inside container → runs on 0.0.0.0:8000
+- Port mapping 8000:8000 → bridges host ↔ container
+- Browser → localhost:8000 → reaches FastAPI
+  
 ### 2. Why add 'docker-compose.yml' for local dev?
 This is required for multiple services (FastAPI, Postgres, maybe Redis).
 
