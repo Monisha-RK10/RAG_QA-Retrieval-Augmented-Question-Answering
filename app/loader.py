@@ -2,7 +2,8 @@
 # Step 1: PDF loading + chunking
 
 from langchain_community.document_loaders import PyPDFLoader                                                   # Reads the PDF and returns a list of Document objects (usually one per page). Each Document has at least page_content (string) and metadata (dict, often includes source and page number).
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+#from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List
 from langchain.schema import Document                                                                          # To annotate the return type and help editors/linters, for type hints
 
