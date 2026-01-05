@@ -1,6 +1,8 @@
 #from pydantic import BaseSettings
 from pydantic_settings import BaseSettings   # <-- changed import
+from pydantic import ConfigDict
 import yaml
+import os
 
 class Settings(BaseSettings):
     llm_model: str
@@ -13,7 +15,8 @@ class Settings(BaseSettings):
     class ConfigDict:
         extra = "forbid"  # (default in pydantic v2, means no extra keys allowed)
 
-def load_settings(path="config.yaml"):
+def load_settings(path: str = None) -> Settings:
+    path = path or os.getenv("CONFIG_PATH", "config.yaml")
     with open(path, "r") as f:
         cfg = yaml.safe_load(f)
     return Settings(**cfg)
