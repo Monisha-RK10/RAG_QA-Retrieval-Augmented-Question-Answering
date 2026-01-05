@@ -5,7 +5,8 @@ from langchain_community.document_loaders import PyPDFLoader                    
 #from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from typing import List
-from langchain.schema import Document                                                                          # To annotate the return type and help editors/linters, for type hints
+#from langchain.schema import Document                                                                          # To annotate the return type and help editors/linters, for type hints
+from langchain_core.documents import Document
 
 def load_and_chunk_pdf(pdf_path: str, chunk_size: int = 300, chunk_overlap: int = 100) -> List[Document]:
     """
