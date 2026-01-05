@@ -1,27 +1,28 @@
+# --- API ---
 fastapi>=0.102.0
 uvicorn[standard]>=0.23.0
 python-multipart
 
-# LangChain (latest installable versions)
-langchain>=0.2.0
-langchain-community>=0.2.0
-langchain-core>=0.2.0
-langchain-text-splitters>=0.2.0
+# --- LangChain v0.3.x ---
+langchain==0.3.30
+langchain-community==0.3.30
+langchain-core==0.3.30
+langchain-text-splitters==0.3.30
 
-# Vector DB
+# --- Vector DB ---
 chromadb>=0.3.26
 
-# ML / Embeddings
+# --- ML / Embeddings ---
 transformers>=4.35.0
 torch>=2.1.0
 sentence-transformers
 
-# PDF / Docs
+# --- PDF / Docs ---
 pypdf>=3.14.0
 reportlab
 
-# Config / Settings
+# --- Config / Settings ---
 pydantic-settings
 
-# Database
+# --- Database ---
 psycopg2-binary
