@@ -3,11 +3,11 @@ fastapi>=0.102.0
 uvicorn[standard]>=0.23.0
 python-multipart
 
-# --- LangChain v0.3.x ---
-langchain==0.3.30
-langchain-community==0.3.30
-langchain-core==0.3.30
-langchain-text-splitters==0.3.30
+# --- LangChain old compatible versions ---
+langchain==0.3.27
+langchain-community==0.3.27
+langchain-core==0.3.27
+langchain-text-splitters==0.3.27
 
 # --- Vector DB ---
 chromadb>=0.3.26
