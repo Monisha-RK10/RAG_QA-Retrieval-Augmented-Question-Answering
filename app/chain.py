@@ -10,7 +10,8 @@
 # This structured input goes into the LLM (llm.py).
 # Output: Answer (shaped by template rules) + Source docs (for traceability).
 
-from langchain.chains import RetrievalQA          # Main LangChain package
+#from langchain.chains import RetrievalQA          # Main LangChain package
+from langchain.chains import create_retrieval_chain       
 from langchain.prompts import PromptTemplate      # PromptTemplate lives here
 from langchain.schema import BaseRetriever        # BaseRetriever interface
 from langchain.llms.base import LLM               # Base LLM class
@@ -53,7 +54,7 @@ def build_qa_chain(llm: LLM, vectordb: BaseRetriever, k: int = 3, metadata_filte
         search_type="similarity",                                                                                 # It computes embeddings for the query and finds the k nearest neighbors in vector space (cosine similarity, dot product, etc.).
         search_kwargs=search_kwargs                                                                               # Similarity search = KNN with a similarity metric, mechanism inside similarity search.
     )                                                                                                             # Uses similarity search, top-3 docs. Fast, simple, scalable, perfect for MVPs. Add a re-ranker if production-level precision is needed.
-    qa_chain = RetrievalQA.from_chain_type(
+    qa_chain = create_retrieval_chain(
         llm=llm,                                                                                                  # LLM itself (loaded in llm.py)
         retriever=retriever,                                                                                      # Retriever wrapping the vector DB (from embeddings.py)
         return_source_documents=True,                                                                             # Returns both answer + source documents (important for transparency).
