@@ -10,10 +10,11 @@
 # This structured input goes into the LLM (llm.py).
 # Output: Answer (shaped by template rules) + Source docs (for traceability).
 
-from langchain.chains import RetrievalQA
+#from langchain.chains import RetrievalQA
+from langchain_core.chains import RetrievalQA
 from langchain_core.prompts import PromptTemplate
-from langchain.schema import BaseRetriever
-from langchain.llms.base import LLM
+from langchain_core.schema import BaseRetriever
+from langchain_core.llms.base import LLM
 
 # Defines style & constraints of LLM answers (fact-based, complete sentences).
 template = """You are an expert assistant answering questions based only on the provided context.        
